@@ -1,8 +1,19 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './routes/ProtectedRoute';
+import Login from './features/auth/Login';
+import Dashboard from './pages/Dashboard';
 
-import './App.css'
 
-function App() {
-  return <h1>Welcome to Deliveroo Frontend!</h1>;
-}
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <ProtectedRoute path="/admin-dashboard" element={<Dashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;
