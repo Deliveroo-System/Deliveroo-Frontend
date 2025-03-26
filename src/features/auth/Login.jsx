@@ -36,81 +36,121 @@ const Login = () => {
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center"
       style={{
-        backgroundImage: "url('https://source.unsplash.com/random/1920x1080?restaurant')",
+        backgroundImage: "url('/src/assets/img/background-1591228.jpg')",
+        filter: "blur(0px)" // This will be handled by the overlay
       }}
     >
-      <div className="bg-white/10 backdrop-blur-xl shadow-2xl rounded-2xl p-8 w-full max-w-md border border-gray-700">
-        <h2 className="text-3xl font-extrabold text-center text-gray-100 mb-6">
+      {/* Background overlay with color and blur */}
+      <div 
+        className="absolute inset-0 bg-[#3E3F5B] opacity-90 backdrop-blur-md"
+        style={{
+          background: "linear-gradient(to bottom right, rgba(62, 63, 91, 0.9), rgba(138, 178, 166, 0.2))",
+        }}
+      ></div>
+      
+      {/* Login form container */}
+      <div className="relative bg-[#F6F1DE] rounded-2xl p-8 w-full max-w-md shadow-xl z-40 transition-all hover:shadow-lg">
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+  <div className=" bg-white/10 rounded-xl shadow-md backdrop-blur-sm">
+    <img
+      src="src/assets/img/food ordering and delivery platform (2).png"
+      alt="Logo"
+      className="w-28 h-28 object-contain rounded-lg"
+    />
+  </div>
+</div>
+
+        <h2 className="text-3xl font-bold text-center text-[#3E3F5B] mb-6 tracking-tight">
           Admin Login
         </h2>
         {error && (
-          <p className="text-red-400 text-sm text-center font-medium">{error}</p>
+          <p className="text-[#3E3F5B] text-sm text-center font-medium animate-pulse">{error}</p>
         )}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-[#3E3F5B]/80 mb-2">
               Email
             </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-gray-900 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition"
-              placeholder="Enter your email"
-              required
-            />
+            <div className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white text-[#3E3F5B] outline-none transition placeholder:text-[#3E3F5B]/60 focus:ring-2 focus:ring-[#8AB2A6]/50"
+                placeholder="Enter your email"
+                required
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg className="h-5 w-5 text-[#3E3F5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
           </div>
+          
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-[#3E3F5B]/80 mb-2">
               Password
             </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-gray-900 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition pr-12"
-              placeholder="Enter your password"
-              required
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-white transition"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
-            </button>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white text-[#3E3F5B] outline-none transition placeholder:text-[#3E3F5B]/60 focus:ring-2 focus:ring-[#8AB2A6]/50 pr-12"
+                placeholder="Enter your password"
+                required
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <button
+                  type="button"
+                  className="text-[#3E3F5B]/50 hover:text-[#3E3F5B] transition"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
+                </button>
+              </div>
+            </div>
           </div>
+
           <div className="flex items-center justify-between">
-            <label className="flex items-center text-sm text-gray-300">
+            <label className="flex items-center text-sm text-[#3E3F5B]/70">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={() => setRememberMe(!rememberMe)}
-                className="mr-2 accent-blue-500"
+                className="mr-2 rounded bg-white border-[#8AB2A6] text-[#8AB2A6] focus:ring-[#8AB2A6]"
               />
               Remember Me
             </label>
             <button
               type="button"
-              className="text-blue-400 text-sm hover:text-blue-300 transition"
+              className="text-[#8AB2A6] text-sm hover:text-[#ACD3A8] transition"
               onClick={() => navigate("/forgot-password")}
             >
               Forgot Password?
             </button>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            Login
-          </button>
+          
+<button
+  type="submit"
+  style={{
+    backgroundColor: '#27548A',
+    color: 'white',
+  }}
+  className="w-full py-3 rounded-lg font-medium hover:bg-[#ACD3A8] transition-all shadow-md hover:shadow-[#8AB2A6]/30 mt-4 focus:ring-2 focus:ring-[#8AB2A6]/50 focus:outline-none"
+>
+  Login
+</button>
         </form>
-        <div className="text-center mt-5">
-          <p className="text-sm text-gray-400">
+        
+        <div className="text-center mt-6">
+          <p className="text-sm text-[#3E3F5B]/60">
             Don't have an account?{" "}
             <button
               type="button"
-              className="text-blue-400 hover:text-blue-300 transition"
+              className="text-[#8AB2A6] hover:text-[#ACD3A8] transition font-medium"
               onClick={() => navigate("/register")}
             >
               Register
