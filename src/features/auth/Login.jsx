@@ -22,7 +22,7 @@ const Login = () => {
       } else {
         localStorage.removeItem("savedEmail");
       }
-      if (response.role === "RestaurantOwner") {
+      if (response.role === "Admin") {
         navigate("/admin-dashboard");
       } else {
         setError("Invalid role");
