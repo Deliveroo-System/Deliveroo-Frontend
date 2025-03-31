@@ -1,17 +1,20 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "./features/auth/Login";
+import UserLogin from "./features/auth/userLogin";
 import Register from "./features/auth/Register";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import LandinPage from "./pages/DeliverooLanding"
+import RestaurantAdd from "./pages/Restaurant/RestaurantAdd"
 const App = () => {
   return (
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<LandinPage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="auth/login/user" element={<UserLogin />} />
       <Route path="/register" element={<Register />} />
-
+      <Route path="/restaurant/add" element={<RestaurantAdd />} />
       {/* Admin Routes inside AdminLayout */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} /> {/* 👈 Default child route */}

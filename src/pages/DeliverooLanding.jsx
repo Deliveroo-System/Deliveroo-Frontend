@@ -2,7 +2,15 @@ import React from "react";
 import { FaMotorcycle, FaStore, FaBriefcase, FaSearch } from "react-icons/fa";
 import CitiesNearMe from "../components/common/CitiesNearMe ";
 import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 const DeliverooLanding = () => {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/restaurant/add");
+  };
+
   return (
     <div className="font-sans">
       {/* Navigation Bar */}
@@ -78,12 +86,15 @@ const DeliverooLanding = () => {
         <p className="text-gray-600 mb-6 text-lg">  {/* Larger text */}
           Add your restaurant on Deliveroo Food and reach new customers.
         </p>
-        <button className="text-black font-medium hover:underline flex items-center gap-3 text-lg">  {/* Larger text */}
-          Add your restaurant
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
+        <button
+      onClick={handleClick}
+      className="text-black font-medium hover:underline flex items-center gap-3 text-lg"
+    >
+      Add your restaurant
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </button>
       </div>
     </div>
 
