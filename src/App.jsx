@@ -9,7 +9,7 @@ import RestaurantAdd from "./pages/Restaurant/RestaurantAdd";
 import Cart from "./pages/Order/Cart";
 import Checkout from "./pages/Order/Checkout"; // Import Checkout
 import Payment from "./pages/Order/Payment"; // Import Payment
-
+import LoginOrder from "./pages/Order/Login";
 const App = () => {
   return (
     <Routes>
@@ -22,7 +22,7 @@ const App = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/order/checkout" element={<Checkout />} /> {/* Add Checkout route */}
       <Route path="/order/payment" element={<Payment />} /> {/* Add Payment route */}
-
+      <Route path="/order/login" element={<LoginOrder />} /> {/* Add Order Login route */}
       {/* Protected Routes */}
       {/* Admin Routes inside AdminLayout */}
       <Route path="/admin" element={<AdminLayout />}>
