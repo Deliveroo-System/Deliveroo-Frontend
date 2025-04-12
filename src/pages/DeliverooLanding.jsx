@@ -8,7 +8,7 @@ const DeliverooLanding = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/restaurant/add");
+    navigate("auth/login/restaurant-manager");
   };
 
   return (
