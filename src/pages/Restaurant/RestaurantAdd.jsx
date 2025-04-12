@@ -15,7 +15,6 @@ const RestaurantAdd = () => {
     email: "",
   });
 
-  // 🔹 Check if the user is logged in and is a restaurant manager
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
@@ -26,8 +25,10 @@ const RestaurantAdd = () => {
         title: "Access Denied",
         text: "You must be logged in as a Restaurant Manager!",
         confirmButtonText: "Go to Login",
-      }).then(() => {
-        navigate("/auth/login/user");
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/auth/login/user");
+        }
       });
     }
   }, [navigate]);
@@ -35,15 +36,24 @@ const RestaurantAdd = () => {
   // 🔹 Fetch categories from API
   useEffect(() => {
     fetch("http://localhost:8080/api/Restaurant/get-restaurants/categories")
-      .then((response) => response.json())
-      .then((data) => setCategories(data))
-      .catch(() =>
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched Categories:", data); // ✅ Log the categories here
+        setCategories(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error); // ✅ Log error in console
         Swal.fire({
           icon: "error",
           title: "Failed to Load Categories",
           text: "Please try again later.",
-        })
-      );
+        });
+      });
   }, []);
 
   // 🔹 Handle form input changes
@@ -94,18 +104,18 @@ const RestaurantAdd = () => {
         <div className="mb-4">
           <label className="block text-gray-700">Category</label>
           <select
-            name="categoryId"
-            value={formData.categoryId}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
+  name="categoryId"
+  value={formData.categoryId}
+  onChange={handleChange}
+  className=""
+  required
+>
+{categories.map((cat) => (
+  <option key={cat.categoryId} value={cat.categoryId}>
+    {cat.categoryName}
+  </option>
+))}
+
           </select>
         </div>
 
@@ -167,6 +177,57 @@ const RestaurantAdd = () => {
             required
           />
         </div>
+        <div className="mb-4">
+  <label className="block text-gray-700">Opening Time</label>
+  <input
+    type="time"
+    name="openingTime"
+    value={formData.openingTime}
+    onChange={handleChange}
+    className="w-full p-2 border rounded"
+    required
+  />
+</div>
+
+<div className="mb-4">
+  <label className="block text-gray-700">Closing Time</label>
+  <input
+    type="time"
+    name="closingTime"
+    value={formData.closingTime}
+    onChange={handleChange}
+    className="w-full p-2 border rounded"
+    required
+  />
+</div>
+
+<div className="mb-4">
+  <label className="block text-gray-700">Is Approved</label>
+  <select
+    name="isApproved"
+    value={formData.isApproved}
+    onChange={handleChange}
+    className="w-full p-2 border rounded"
+    required
+  >
+    <option value={true}>Yes</option>
+    <option value={false}>No</option>
+  </select>
+</div>
+
+<div className="mb-4">
+  <label className="block text-gray-700">Is Available</label>
+  <select
+    name="isAvailable"
+    value={formData.isAvailable}
+    onChange={handleChange}
+    className="w-full p-2 border rounded"
+    required
+  >
+    <option value={true}>Yes</option>
+    <option value={false}>No</option>
+  </select>
+</div>
 
         <button
           type="submit"
