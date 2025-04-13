@@ -9,7 +9,9 @@ const mockMenu = [
     price: 10, 
     description: "Classic cheese and tomato pizza with fresh basil", 
     category: "Pizza",
-    image: "/api/placeholder/300/200"
+    image: "https://images.pexels.com/photos/18431672/pexels-photo-18431672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+   
+
   },
   { 
     id: 2, 
@@ -17,7 +19,8 @@ const mockMenu = [
     price: 12, 
     description: "Tomato sauce, mozzarella cheese and pepperoni", 
     category: "Pizza",
-    image: "/api/placeholder/300/200"
+    image: "https://images.pexels.com/photos/30478774/pexels-photo-30478774.jpeg?cs=srgb&dl=pexels-rodrigo-ortega-2044210904-30478774.jpg&fm=jpg"
+  
   },
   { 
     id: 3, 
@@ -25,7 +28,8 @@ const mockMenu = [
     price: 8, 
     description: "Angus beef patty with cheese, lettuce, tomato and special sauce",
     category: "Burgers",
-    image: "/api/placeholder/300/200"
+    image: "https://images.pexels.com/photos/1552641/pexels-photo-1552641.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+ 
   },
   { 
     id: 4, 
@@ -33,7 +37,8 @@ const mockMenu = [
     price: 7, 
     description: "Plant-based patty with avocado and vegan mayo",
     category: "Burgers",
-    image: "/api/placeholder/300/200" 
+    image: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  
   },
   { 
     id: 5, 
@@ -41,15 +46,17 @@ const mockMenu = [
     price: 12, 
     description: "Creamy pasta with bacon, eggs and parmesan",
     category: "Pasta",
-    image: "/api/placeholder/300/200" 
+    image: "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  
   },
   { 
     id: 6, 
-    name: "Penne Arrabiata", 
+    name: "Fettuccine Alfredo", 
     price: 11, 
     description: "Spicy tomato sauce with garlic and herbs",
     category: "Pasta",
-    image: "/api/placeholder/300/200" 
+    image: "https://images.pexels.com/photos/5175578/pexels-photo-5175578.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  
   },
   { 
     id: 7, 
@@ -57,15 +64,17 @@ const mockMenu = [
     price: 7, 
     description: "Romaine lettuce with croutons, parmesan and Caesar dressing",
     category: "Salads",
-    image: "/api/placeholder/300/200" 
+    image: "https://images.pexels.com/photos/808245/pexels-photo-808245.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+ 
   },
   { 
     id: 8, 
-    name: "Greek Salad", 
+    name: "Caprese Salad", 
     price: 8, 
     description: "Cucumber, tomato, olives, feta cheese and olive oil dressing",
     category: "Salads",
-    image: "/api/placeholder/300/200" 
+    image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+ 
   },
 ];
 
@@ -112,11 +121,35 @@ function Cart() {
         </button>
       </div>
     </nav>
-    <div className="min-h-screen bg-gray-50">
+    <div
+  className="min-h-screen bg-gray-50"
+  style={{
+    backgroundImage: "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed",
+    position: "relative",
+  }}
+>
+  <div
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.9)", // Dark overlay to reduce brightness
+      zIndex: -1,  
+    }}
+  ></div> 
+              
+
       
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="max-w-6xl mx-auto px-4 py-12"
+      >
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Menu Section */}
           <div className="lg:w-2/3">
