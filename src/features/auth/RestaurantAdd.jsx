@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RestaurantAdd = () => {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const RestaurantAdd = () => {
         confirmButtonText: "Go to Login",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/auth/login/user");
+          navigate("/auth/login/restaurant-manager");
         }
       });
     }
@@ -69,16 +71,16 @@ const RestaurantAdd = () => {
       }),
     })
       .then(async (res) => {
-        const text = await res.text();
-        if (!res.ok) throw new Error(text || "Failed to add restaurant");
-        return text ? JSON.parse(text) : {};
+        const contentType = res.headers.get("content-type");
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to add restaurant");
+        }
+        return contentType && contentType.includes("application/json") ? res.json() : {};
       })
       .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Restaurant Added!",
-          text: "Your restaurant was added successfully.",
-        }).then(() => navigate("/restaurant-manager"));
+        toast.success("🎉 Restaurant added successfully!");
+        setTimeout(() => navigate("/restaurant-manager"), 2000);
       })
       .catch((err) => {
         Swal.fire({
@@ -91,29 +93,29 @@ const RestaurantAdd = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col md:flex-row bg-black text-white">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       {/* Left Hero Section */}
       <div
-  className="hidden md:block md:w-1/2 relative bg-cover bg-center"
-  style={{
-    backgroundImage:
-      "url('https://images.unsplash.com/photo-1661529515567-dcb300f41da5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-  }}
->
-  {/* Overlay inside image box */}
-  <div className="absolute inset-0 bg-black bg-opacity-70"></div>
-
-  {/* Text inside overlay */}
-  <div className="relative z-10 h-full flex flex-col justify-center p-10 text-white">
-    <h1 className="text-5xl font-bold mb-6 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-      Ready to <span className="text-[#FF5823]">Serve</span>?
-    </h1>
-    <p className="text-lg leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
-      List your restaurant on <span className="text-[#FF5823] font-semibold">Deliveroo FOOD</span> and join the fastest-growing food
-      delivery platform. Connect with food lovers and boost your business visibility 🍜📈🚀
-    </p>
-  </div>
-</div>
-
+        className="hidden md:block md:w-1/2 relative bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1661529515567-dcb300f41da5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+        <div className="relative z-10 h-full flex flex-col justify-center p-10 text-white">
+          <h1 className="text-5xl font-bold mb-6 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            Ready to <span className="text-[#FF5823]">Serve</span>?
+          </h1>
+          <p className="text-lg leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+            List your restaurant on{" "}
+            <span className="text-[#FF5823] font-semibold">Deliveroo FOOD</span>{" "}
+            and join the fastest-growing food delivery platform. Connect with
+            food lovers and boost your business visibility 🍜📈🚀
+          </p>
+        </div>
+      </div>
 
       {/* Right Form Section */}
       <div className="w-full md:w-1/2 bg-white text-black p-10 flex items-center justify-center">
