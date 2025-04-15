@@ -5,8 +5,8 @@ import Register from "./features/auth/Register";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import LandinPage from "./pages/DeliverooLanding"
-import RestaurantAdd from "./pages/Restaurant/RestaurantAdd"
-import RestaurantManagerRegister from "./pages/Restaurant/RegistrationFlow";
+import RestaurantAdd from "./features/auth/RestaurantAdd"
+import RestaurantManagerRegister from "./features/auth/RegistrationFlow";
 const App = () => {
   return (
     <Routes>

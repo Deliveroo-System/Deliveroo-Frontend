@@ -3,6 +3,11 @@ import { FaMotorcycle, FaStore, FaBriefcase, FaSearch } from "react-icons/fa";
 import CitiesNearMe from "../components/common/CitiesNearMe ";
 import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+
+import CookieConsent from "../components/common/Cookie";
+
+// Then at the bottom of the return statement, before the closing </div>
+<CookieConsent />
 const DeliverooLanding = () => {
 
   const navigate = useNavigate();
@@ -74,7 +79,7 @@ const DeliverooLanding = () => {
         />
         {/* Larger icon overlay */}
         <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center">
-          <FaStore className="text-black text-2xl" />  {/* Larger icon */}
+           {/* Larger icon */}
         </div>
       </div>
       
@@ -109,7 +114,7 @@ const DeliverooLanding = () => {
         />
         {/* Larger icon overlay */}
         <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center">
-          <FaMotorcycle className="text-black text-2xl" />
+        
         </div>
       </div>
       
@@ -141,7 +146,7 @@ const DeliverooLanding = () => {
         />
         {/* Larger icon overlay */}
         <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center">
-          <FaBriefcase className="text-black text-2xl" />
+        
         </div>
       </div>
       
@@ -249,6 +254,7 @@ const DeliverooLanding = () => {
     </div>
   </div>
 </footer>
+<CookieConsent />
     </div>
   );
 };

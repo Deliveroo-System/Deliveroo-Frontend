@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import RestaurantAdd from "./RestaurantAdd";
 import { motion, AnimatePresence } from "framer-motion";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegistrationFlow = () => {
   const [step, setStep] = useState(1);
@@ -19,18 +21,56 @@ const RegistrationFlow = () => {
     setManagerData({ ...managerData, [e.target.name]: e.target.value });
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (managerData.password !== managerData.confirmPassword) {
-      alert("Passwords do not match 🚨");
+      toast.error("Passwords do not match 🚨");
       return;
     }
-    setStep(2);
+  
+    for (let key in managerData) {
+      if (!managerData[key]) {
+        toast.warn(`Please fill in your ${key}`);
+        return;
+      }
+    }
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...managerData, id: "2" }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+  
+        toast.success("Registration successful 🎉");
+  
+        // Navigate to step 2 after a short delay
+        setTimeout(() => {
+          setStep(2);
+        }, 1500);
+      } else {
+        toast.error(data.message || "Registration failed ❌");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Something went wrong. Please try again later.");
+    }
   };
+  
+  
 
   const togglePassword = () => setShowPassword(!showPassword);
 
   return (
     <div className="w-full min-h-screen bg-black text-white flex items-center justify-center">
+     <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <AnimatePresence mode="wait">
         {step === 1 && (
           <motion.div
