@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
+
 const mockMenu = [
   { 
     id: 1, 
@@ -76,6 +77,31 @@ const mockMenu = [
     image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
  
   },
+  { 
+    id: 9, 
+    name: "Lemonade", 
+    price: 3, 
+    description: "Freshly squeezed lemonade with mint", 
+    category: "Drinks", 
+    image: "https://images.pexels.com/photos/96974/pexels-photo-96974.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  },
+  { 
+    id: 10, 
+    name: "Iced Coffee", 
+    price: 4, 
+    description: "Chilled coffee with milk and ice", 
+    category: "Drinks", 
+    image: "https://images.pexels.com/photos/624015/pexels-photo-624015.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  },
+  { 
+    id: 11, 
+    name: "Orange Juice", 
+    price: 3.5, 
+    description: "Fresh orange juice served cold", 
+    category: "Drinks", 
+    image: "https://images.pexels.com/photos/96974/pexels-photo-96974.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  } ,
+  
 ];
 
 function Cart() {
@@ -86,7 +112,7 @@ function Cart() {
   const categories = ["All", ...new Set(mockMenu.map(item => item.category))];
 
   const addToCart = (item) => {
-    setCartItems([...cartItems, item]);
+    setCartItems([...cartItems, { ...item, instructions: "" }]);
   };
 
   const removeFromCart = (index) => {
@@ -139,7 +165,7 @@ function Cart() {
       left: 0,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.9)", // Dark overlay to reduce brightness
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // Reduced opacity from 0.7 to 0.5
       zIndex: -1,  
     }}
   ></div> 

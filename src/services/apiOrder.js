@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api";  
+const API_BASE_URL = "http://localhost:5000/api"; // Replace with your backend URL if deployed
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -47,6 +47,17 @@ export const orderService = {
   },
   deleteOrder: async (orderId) => {
     const response = await api.delete(`/orders/${orderId}`);
+    return response.data;
+  },
+};
+
+export const userDetailsService = {
+  createUserDetails: async (userDetails) => {
+    const response = await api.post("/userdetails/userdetails", userDetails); // Updated endpoint
+    return response.data;
+  },
+  getUserDetails: async (userId) => {
+    const response = await api.get(`/userdetails/${userId}`);
     return response.data;
   },
 };
