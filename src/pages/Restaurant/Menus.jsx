@@ -34,29 +34,104 @@ export default function Menus() {
   useEffect(() => {
     fetchMenus();
   }, []);
+
   const handleCreateItem = async () => {
     const { value: formValues } = await MySwal.fire({
       title: "Add Menu Item",
       html: `
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <input id="item-name" class="swal2-input" placeholder="Name" />
-          <textarea id="item-desc" class="swal2-textarea" placeholder="Description"></textarea>
-          <input id="item-price" type="number" class="swal2-input" placeholder="Price" />
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <input 
+            id="item-name" 
+            class="swal2-input" 
+            placeholder="Item Name" 
+            style="padding: 12px; border-radius: 8px;"
+          />
+          
+          <textarea 
+            id="item-desc" 
+            class="swal2-textarea" 
+            placeholder="Description"
+            style="padding: 12px; border-radius: 8px; min-height: 100px;"
+          ></textarea>
+          
+          <input 
+            id="item-price" 
+            type="number" 
+            class="swal2-input" 
+            placeholder="Price (e.g. 9.99)"
+            style="padding: 12px; border-radius: 8px;"
+            step="0.01"
+            min="0"
+          />
           
           <div style="display: flex; gap: 10px; align-items: center;">
-            <input id="item-image" class="swal2-input" placeholder="Image filename (ex: veggie_pizza.jpg)" />
-            <button id="image-picker" style="padding: 8px 8px; background-color: #FF5823; border: none; color: white; border-radius: 5px; cursor: pointer;  width: 300px; margin-top:31px ">
-              📁 Browse
-            </button>
-          </div>
-  
-          <label style="font-size: 14px; display: flex; align-items: center; gap: 5px;">
-            <input type="checkbox" id="item-available" checked /> Available
-          </label>
+          <input id="item-image" class="swal2-input" placeholder="Image filename (ex: veggie_pizza.jpg)" />
+          <button id="image-picker" style="padding: 8px 8px; background-color: #FF5823; border: none; color: white; border-radius: 5px; cursor: pointer;  width: 300px; margin-top:31px ">
+            📁 Browse
+          </button>
         </div>
+
+          
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
+            <span style="font-size: 14px; color: #333;">Item Availability</span>
+            <label style="
+              position: relative;
+              display: inline-block;
+              width: 50px;
+              height: 26px;
+              margin-left: 10px;
+            ">
+              <input 
+                type="checkbox" 
+                id="item-available" 
+                style="opacity: 0; width: 0; height: 0;"
+                checked
+              />
+              <span style="
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+                border-radius: 34px;
+              "></span>
+              <span style="
+                position: absolute;
+                height: 18px;
+                width: 18px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+              "></span>
+            </label>
+          </div>
+        </div>
+        
+        <style>
+          #image-picker:hover {
+            background-color: #E04A1A !important;
+          }
+          input:checked + span {
+            background-color: #FF5823 !important;
+          }
+          input:checked + span:before {
+            transform: translateX(24px) !important;
+          }
+        </style>
       `,
       focusConfirm: false,
-      confirmButtonText: "Add",
+      confirmButtonText: "Add Item",
+      confirmButtonColor: "#FF5823",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      customClass: {
+        popup: 'custom-swal-popup',
+      },
       didOpen: () => {
         const pickerButton = document.getElementById("image-picker");
         const imageInput = document.getElementById("item-image");
@@ -70,11 +145,25 @@ export default function Menus() {
             const file = event.target.files[0];
             if (file) {
               imageInput.value = file.name;
-              // You can also implement a file upload or copy logic to /assets if needed
             }
           };
   
           fileInput.click();
+        });
+  
+        // Add toggle switch functionality
+        const toggle = document.getElementById("item-available");
+        const slider = toggle.nextElementSibling;
+        const sliderCircle = slider.nextElementSibling;
+  
+        toggle.addEventListener('change', function() {
+          if(this.checked) {
+            slider.style.backgroundColor = '#FF5823';
+            sliderCircle.style.transform = 'translateX(24px)';
+          } else {
+            slider.style.backgroundColor = '#ccc';
+            sliderCircle.style.transform = 'translateX(0)';
+          }
         });
       },
       preConfirm: () => {
@@ -82,7 +171,7 @@ export default function Menus() {
           name: document.getElementById("item-name").value,
           description: document.getElementById("item-desc").value,
           price: parseFloat(document.getElementById("item-price").value),
-          imageUrl: document.getElementById("item-image").value, // we only store the filename like "veggie_pizza.jpg"
+          imageUrl: document.getElementById("item-image").value,
           isAvailable: document.getElementById("item-available").checked,
         };
       },
@@ -95,38 +184,123 @@ export default function Menus() {
           formValues,
           { headers }
         );
-        Swal.fire("Success", "Menu item added!", "success");
+        Swal.fire({
+          title: "Success!",
+          text: "Menu item added successfully",
+          icon: "success",
+          confirmButtonColor: "#FF5823"
+        });
         handleMenuClick(selectedMenuId);
       } catch (err) {
-        Swal.fire("Error", "Failed to add item.", "error");
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to add item. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#FF5823"
+        });
       }
     }
   };
-  
 
   const handleUpdateItem = async (item) => {
     const { value: formValues } = await MySwal.fire({
       title: "Edit Menu Item",
       html: `
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <input id="item-name" class="swal2-input" value="${item.name}" placeholder="Item Name" />
-          <textarea id="item-desc" class="swal2-textarea" placeholder="Description">${item.description}</textarea>
-          <input id="item-price" type="number" class="swal2-input" value="${item.price}" placeholder="Price" />
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <input 
+            id="item-name" 
+            class="swal2-input" 
+            value="${item.name || ''}" 
+            placeholder="Item Name"
+            style="padding: 12px; border-radius: 8px;"
+          />
+          
+          <textarea 
+            id="item-desc" 
+            class="swal2-textarea" 
+            placeholder="Description"
+            style="padding: 12px; border-radius: 8px; min-height: 100px;"
+          >${item.description || ''}</textarea>
+          
+          <input 
+            id="item-price" 
+            type="number" 
+            class="swal2-input" 
+            value="${item.price || ''}"
+            placeholder="Price (e.g. 9.99)"
+            style="padding: 12px; border-radius: 8px;"
+            step="0.01"
+            min="0"
+          />
           
           <div style="display: flex; align-items: center; gap: 10px;">
-            <input id="item-image" class="swal2-input" value="${item.imageUrl}" placeholder="Image filename (e.g. veggie.jpg)" />
-            <button id="image-picker" style="padding: 8px 8px; background-color: #FF5823; border: none; color: white; border-radius: 5px; cursor: pointer;  width: 380px; margin-top:30px ">
-              📁 Browse
-            </button>
-          </div>
-  
-          <label style="font-size:14px; display: flex; align-items: center; gap: 5px;">
-            <input type="checkbox" id="item-available" ${item.isAvailable ? "checked" : ""} /> Available
-          </label>
+          <input id="item-image" class="swal2-input" value="${item.imageUrl}" placeholder="Image filename (e.g. veggie.jpg)" />
+          <button id="image-picker" style="padding: 8px 8px; background-color: #FF5823; border: none; color: white; border-radius: 5px; cursor: pointer;  width: 380px; margin-top:30px ">
+            📁 Browse
+          </button>
         </div>
+          
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
+            <span style="font-size: 14px; color: #333;">Item Availability</span>
+            <label style="
+              position: relative;
+              display: inline-block;
+              width: 50px;
+              height: 26px;
+              margin-left: 10px;
+            ">
+              <input 
+                type="checkbox" 
+                id="item-available" 
+                style="opacity: 0; width: 0; height: 0;"
+                ${item.isAvailable ? 'checked' : ''}
+              />
+              <span style="
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: ${item.isAvailable ? '#FF5823' : '#ccc'};
+                transition: .4s;
+                border-radius: 34px;
+              "></span>
+              <span style="
+                position: absolute;
+                height: 18px;
+                width: 18px;
+                left: ${item.isAvailable ? '26px' : '4px'};
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+              "></span>
+            </label>
+          </div>
+        </div>
+        
+        <style>
+          #image-picker:hover {
+            background-color: #E04A1A !important;
+          }
+          input:checked + span {
+            background-color: #FF5823 !important;
+          }
+          input:focus + span {
+            box-shadow: 0 0 0 2px rgba(255, 88, 35, 0.3);
+          }
+          input:checked + span + span {
+            transform: translateX(1px) !important;
+          }
+        </style>
       `,
       focusConfirm: false,
-      confirmButtonText: "Update",
+      confirmButtonText: "Update Item",
+      confirmButtonColor: "#FF5823",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      width: '600px',
       didOpen: () => {
         const pickerButton = document.getElementById("image-picker");
         const imageInput = document.getElementById("item-image");
@@ -144,6 +318,21 @@ export default function Menus() {
           };
   
           fileInput.click();
+        });
+  
+        // Initialize toggle switch
+        const toggle = document.getElementById("item-available");
+        const slider = toggle.nextElementSibling;
+        const sliderCircle = slider.nextElementSibling;
+  
+        toggle.addEventListener('change', function() {
+          if(this.checked) {
+            slider.style.backgroundColor = '#FF5823';
+            sliderCircle.style.left = '26px';
+          } else {
+            slider.style.backgroundColor = '#ccc';
+            sliderCircle.style.left = '4px';
+          }
         });
       },
       preConfirm: () => {
@@ -164,14 +353,23 @@ export default function Menus() {
           formValues,
           { headers }
         );
-        Swal.fire("Success", "Menu item updated!", "success");
+        Swal.fire({
+          title: "Updated!",
+          text: "Menu item has been updated",
+          icon: "success",
+          confirmButtonColor: "#FF5823"
+        });
         handleMenuClick(selectedMenuId);
       } catch (err) {
-        Swal.fire("Error", "Failed to update item.", "error");
+        Swal.fire({
+          title: "Error!",
+          text: err.response?.data?.message || "Failed to update item",
+          icon: "error",
+          confirmButtonColor: "#FF5823"
+        });
       }
     }
   };
-  
 
   const handleDeleteItem = async (item) => {
     const confirm = await Swal.fire({
@@ -203,14 +401,31 @@ export default function Menus() {
         `http://localhost:8080/api/restaurant/menu/MenuItems/${restaurantId}/menus/${menuId}/items`,
         { headers }
       );
-      setMenuItems(response.data);
-      if (response.data.length === 0) {
-        setMenuItems([]);
-      }
-
+      
+      // Always set the selected menu ID first
       setSelectedMenuId(menuId);
+      
+      if (response.data && response.data.length > 0) {
+        setMenuItems(response.data);
+      } else {
+        setMenuItems([]); // Clear any existing items
+        MySwal.fire({
+          title: "No Items Found",
+          text: "This menu currently has no items.",
+          icon: "info",
+          confirmButtonText: "OK"
+        });
+      }
     } catch (error) {
       console.error("Error fetching menu items:", error);
+      setMenuItems([]); // Clear items on error too
+      setSelectedMenuId(null); // Optionally clear selection on error
+      MySwal.fire({
+        
+        text: "No menu items For This",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
     }
   };
 
@@ -218,24 +433,107 @@ export default function Menus() {
     const { value: result } = await MySwal.fire({
       title: "Add New Menu",
       html: `
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <input id="menu-name" class="swal2-input" placeholder="Menu Name" />
-          <textarea id="menu-desc" class="swal2-textarea" placeholder="Description"></textarea>
-          <label style="font-size:14px">
-            <input type="checkbox" id="menu-active" checked /> Is Active
-          </label>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <input 
+            id="menu-name" 
+            class="swal2-input" 
+            placeholder="Menu Name"
+            style="padding: 12px; border-radius: 8px;"
+          />
+          
+          <textarea 
+            id="menu-desc" 
+            class="swal2-textarea" 
+            placeholder="Description"
+            style="padding: 12px; border-radius: 8px; min-height: 100px;"
+          ></textarea>
+          
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 14px; color: #333;">Menu Status</span>
+            <label style="
+              position: relative;
+              display: inline-block;
+              width: 50px;
+              height: 26px;
+              margin-left: 10px;
+            ">
+              <input 
+                type="checkbox" 
+                id="menu-active" 
+                style="opacity: 0; width: 0; height: 0;"
+                checked
+              />
+              <span style="
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #FF5823;
+                transition: .4s;
+                border-radius: 34px;
+              "></span>
+              <span style="
+                position: absolute;
+                height: 18px;
+                width: 18px;
+                left: 26px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+              "></span>
+            </label>
+          </div>
         </div>
+        
+        <style>
+          input:checked + span {
+            background-color: #FF5823 !important;
+          }
+          input:focus + span {
+            box-shadow: 0 0 0 2px rgba(255, 88, 35, 0.3);
+          }
+          input:not(:checked) + span {
+            background-color: #ccc !important;
+          }
+          input:not(:checked) + span + span {
+            transform: translateX(-1px) !important;
+          }
+        </style>
       `,
       focusConfirm: false,
-      confirmButtonText: "Create",
+      confirmButtonText: "Create Menu",
+      confirmButtonColor: "#FF5823",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      width: '600px',
       preConfirm: () => {
-        const menuName = document.getElementById("menu-name").value;
-        const description = document.getElementById("menu-desc").value;
-        const isActive = document.getElementById("menu-active").checked;
-        return { menuName, description, isActive };
+        return {
+          menuName: document.getElementById("menu-name").value,
+          description: document.getElementById("menu-desc").value,
+          isActive: document.getElementById("menu-active").checked,
+        };
+      },
+      didOpen: () => {
+        // Initialize toggle switch interaction
+        const toggle = document.getElementById("menu-active");
+        const slider = toggle.nextElementSibling;
+        const sliderCircle = slider.nextElementSibling;
+  
+        toggle.addEventListener('change', function() {
+          if(this.checked) {
+            slider.style.backgroundColor = '#FF5823';
+            sliderCircle.style.left = '26px';
+          } else {
+            slider.style.backgroundColor = '#ccc';
+            sliderCircle.style.left = '4px';
+          }
+        });
       },
     });
-
+  
     if (result) {
       try {
         await axios.post(
@@ -243,10 +541,20 @@ export default function Menus() {
           result,
           { headers }
         );
-        Swal.fire("Created!", "Menu successfully added.", "success");
+        Swal.fire({
+          title: "Created!",
+          text: "Menu successfully added.",
+          icon: "success",
+          confirmButtonColor: "#FF5823"
+        });
         fetchMenus();
       } catch (err) {
-        Swal.fire("Error!", "Failed to create menu.", "error");
+        Swal.fire({
+          title: "Error!",
+          text: err.response?.data?.message || "Failed to create menu",
+          icon: "error",
+          confirmButtonColor: "#FF5823"
+        });
       }
     }
   };
@@ -255,32 +563,108 @@ export default function Menus() {
     const { value: result } = await MySwal.fire({
       title: "Edit Menu",
       html: `
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <input id="menu-name" class="swal2-input" placeholder="Menu Name" value="${
-            menu.menuName
-          }" />
-          <textarea id="menu-desc" class="swal2-textarea" placeholder="Description">${
-            menu.menuDescription
-          }</textarea>
-          <label style="font-size:14px">
-            <input type="checkbox" id="menu-active" ${
-              menu.isAvailable ? "checked" : ""
-            } /> Is Active
-          </label>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <input 
+            id="menu-name" 
+            class="swal2-input" 
+            value="${menu.menuName || ''}" 
+            placeholder="Menu Name"
+            style="padding: 12px; border-radius: 8px;"
+          />
+          
+          <textarea 
+            id="menu-desc" 
+            class="swal2-textarea" 
+            placeholder="Description"
+            style="padding: 12px; border-radius: 8px; min-height: 100px;"
+          >${menu.menuDescription || ''}</textarea>
+          
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 14px; color: #333;">Menu Status</span>
+            <label style="
+              position: relative;
+              display: inline-block;
+              width: 50px;
+              height: 26px;
+              margin-left: 10px;
+            ">
+              <input 
+                type="checkbox" 
+                id="menu-active" 
+                style="opacity: 0; width: 0; height: 0;"
+                ${menu.isAvailable ? 'checked' : ''}
+              />
+              <span style="
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: ${menu.isAvailable ? '#FF5823' : '#ccc'};
+                transition: .4s;
+                border-radius: 34px;
+              "></span>
+              <span style="
+                position: absolute;
+                height: 18px;
+                width: 18px;
+                left: ${menu.isAvailable ? '26px' : '4px'};
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+              "></span>
+            </label>
+          </div>
         </div>
+        
+        <style>
+          input:checked + span {
+            background-color: #FF5823 !important;
+          }
+          input:focus + span {
+            box-shadow: 0 0 0 2px rgba(255, 88, 35, 0.3);
+          }
+          input:not(:checked) + span {
+            background-color: #ccc !important;
+          }
+          input:not(:checked) + span + span {
+            transform: translateX(-1px) !important;
+          }
+        </style>
       `,
-
       focusConfirm: false,
-      confirmButtonText: "Update",
+      confirmButtonText: "Update Menu",
+      confirmButtonColor: "#FF5823",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      width: '600px',
       preConfirm: () => {
-        const menuName = document.getElementById("menu-name").value;
-        const description = document.getElementById("menu-desc").value;
-        const isActive = document.getElementById("menu-active").checked;
-
-        return { menuName, description, isActive }; // still send isActive as expected
+        return {
+          menuName: document.getElementById("menu-name").value,
+          description: document.getElementById("menu-desc").value,
+          isActive: document.getElementById("menu-active").checked,
+        };
+      },
+      didOpen: () => {
+        // Initialize toggle switch interaction
+        const toggle = document.getElementById("menu-active");
+        const slider = toggle.nextElementSibling;
+        const sliderCircle = slider.nextElementSibling;
+  
+        toggle.addEventListener('change', function() {
+          if(this.checked) {
+            slider.style.backgroundColor = '#FF5823';
+            sliderCircle.style.left = '26px';
+          } else {
+            slider.style.backgroundColor = '#ccc';
+            sliderCircle.style.left = '4px';
+          }
+        });
       },
     });
-
+  
     if (result) {
       try {
         await axios.put(
@@ -288,14 +672,23 @@ export default function Menus() {
           result,
           { headers }
         );
-        Swal.fire("Updated!", "Menu has been updated.", "success");
+        Swal.fire({
+          title: "Updated!",
+          text: "Menu has been updated successfully.",
+          icon: "success",
+          confirmButtonColor: "#FF5823"
+        });
         fetchMenus();
       } catch (err) {
-        Swal.fire("Error!", "Failed to update menu.", "error");
+        Swal.fire({
+          title: "Error!",
+          text: err.response?.data?.message || "Failed to update menu",
+          icon: "error",
+          confirmButtonColor: "#FF5823"
+        });
       }
     }
   };
-
   const handleDelete = async (menuId) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -409,11 +802,26 @@ export default function Menus() {
                 key={item.menuItemId}
                 className="bg-white p-5 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-200 flex flex-col"
               >
-                <img
-                  src={item.imageUrl}
-                  alt={item.name}
-                  className="w-full h-64 object-cover rounded-md mb-4"
-                />
+               <img
+  src={
+    item.imageUrl.startsWith("http")
+      ? item.imageUrl
+      : (() => {
+          try {
+            return require(`../../assets/${item.imageUrl}`);
+          } catch {
+            return item.imageUrl; // fallback to string even if not http
+          }
+        })()
+  }
+  alt={item.name}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = "https://via.placeholder.com/300x200?text=Image+Not+Found";
+  }}
+  className="w-full h-64 object-cover rounded-md mb-4"
+/>
+
                 <div className="flex-1">
                   <h4 className="text-lg font-bold text-gray-800">
                     {item.name}
