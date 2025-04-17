@@ -60,11 +60,29 @@ function Checkout() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token);
-      setUserEmail(decoded.email);
-      setUserName(decoded.email.split("@")[0]);
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded); // Log the entire decoded token for debugging
+
+        // Extract email based on the claims structure
+        const emailClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
+        if (decoded[emailClaim]) {
+          setUserEmail(decoded[emailClaim]);
+          setUserName(decoded[emailClaim].split("@")[0]);
+        } else {
+          console.warn("Token does not contain an email property.");
+          alert("Invalid token. Please log in again.");
+          navigate("/order/login");
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error.message);
+        alert("Failed to decode token. Please log in again.");
+        navigate("/order/login");
+      }
     } else {
-      navigate("/login");
+      console.warn("No token found in localStorage.");
+      alert("You are not logged in. Please log in to continue.");
+      navigate("/order/login");
     }
   }, []);
 

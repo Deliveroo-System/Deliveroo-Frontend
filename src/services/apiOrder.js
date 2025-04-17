@@ -53,11 +53,11 @@ export const orderService = {
 
 export const userDetailsService = {
   createUserDetails: async (userDetails) => {
-    const response = await api.post("/userdetails/userdetails", userDetails); // Updated endpoint
+    const response = await api.post("/userdetails/userdetails", userDetails); // Corrected endpoint
     return response.data;
   },
   getUserDetails: async (userId) => {
-    const response = await api.get(`/userdetails/${userId}`);
+    const response = await api.get(`/userdetails/${userId}`); // Ensure backend supports this route
     return response.data;
   },
 };
