@@ -2,7 +2,7 @@
   "name": "deliveroo-frontend",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -39,6 +39,6 @@
     "globals": "^15.15.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.17",
-    "vite": "^6.2.3"
+    "vite": "^6.3.2"
   }
 }

@@ -16,6 +16,9 @@ import Menus from "./pages/Restaurant/Menus";
 import Payments from "./pages/Restaurant/Payments";
 import Help from "./pages/Restaurant/Help";
 
+//Delivery pages
+import Delivery from "./pages/Delivery/Delivery";
+
 const App = () => {
   return (
     <Routes>
@@ -35,6 +38,11 @@ const App = () => {
         <Route path="payments" element={<Payments />} />
         <Route path="help" element={<Help />} />
       </Route>
+
+      {/** Delivery Routes */ }
+      <Route path="/delivery" element={<Delivery />} />
+
+      {/* Restaurant Routes */}
 
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>

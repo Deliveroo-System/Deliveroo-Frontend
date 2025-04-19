@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/postcss7-compat';  // Use the new package
-import autoprefixer from 'autoprefixer';
+const { defineConfig } = require('vite');
+const react = require('@vitejs/plugin-react');
+const tailwindcss = require('@tailwindcss/postcss7-compat');
+const autoprefixer = require('autoprefixer');
 
-export default defineConfig({
+module.exports = defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
@@ -11,7 +11,7 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [
-        tailwindcss(),  // Add TailwindCSS with the new package
+        tailwindcss(),
         autoprefixer(),
       ],
     },

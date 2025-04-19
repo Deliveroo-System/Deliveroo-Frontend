@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
@@ -14,4 +14,4 @@ export default {
     }
   },
   plugins: [],
-}
+};
