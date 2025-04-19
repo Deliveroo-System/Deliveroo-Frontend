@@ -94,7 +94,7 @@ function Cart() {
       <div
         className="min-h-screen bg-gray-50"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')",
+         // backgroundImage: "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -236,18 +236,18 @@ function Cart() {
             {activeRestaurant && (
               <div className="lg:w-1/3">
                 <div className="bg-white rounded-lg shadow-lg sticky top-4">
-                  <div className="p-10 border-b">
-                    <h2 className="text-3xl font-semibold text-gray-800">Your Order</h2>
-                    <p className="text-gray-500 mt-6 text-lg">
+                  <div className="p-6 border-b">
+                    <h2 className="text-2xl font-semibold text-gray-800">Your Order</h2>
+                    <p className="text-gray-500 mt-4 text-base">
                       {cartItems.length === 0 ? "Your cart is empty" : `${cartItems.length} item(s) in cart`}
                     </p>
                   </div>
 
-                  <div className="p-10">
+                  <div className="p-6">
                     {cartItems.length === 0 ? (
-                      <div className="text-center py-16">
+                      <div className="text-center py-12">
                         <svg
-                          className="w-24 h-24 mx-auto text-gray-300"
+                          className="w-20 h-20 mx-auto text-gray-300"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -260,27 +260,27 @@ function Cart() {
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                           />
                         </svg>
-                        <p className="mt-8 text-gray-500 text-lg">Add some delicious items from our menu</p>
+                        <p className="mt-6 text-gray-500 text-base">Add some delicious items from our menu</p>
                       </div>
                     ) : (
                       <>
-                        <div className="space-y-8 mb-10 max-h-80 overflow-y-auto">
+                        <div className="space-y-6 mb-8 max-h-48 overflow-y-auto">
                           {cartItems.map((item, index) => (
-                            <div key={index} className="flex justify-between items-center p-6 bg-gray-50 rounded-lg">
+                            <div key={index} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                               <div className="flex items-center">
                                 <img
                                   src={item.menuItemImage}
                                   alt={item.menuItemName}
-                                  className="w-24 h-24 object-cover rounded-lg mr-6"
+                                  className="w-16 h-16 object-cover rounded-lg mr-4"
                                 />
                                 <div>
-                                  <h3 className="font-medium text-lg text-gray-800">{item.menuItemName}</h3>
-                                  <p className="text-indigo-600 font-medium text-lg">${item.menuItemPrice.toFixed(2)}</p>
+                                  <h3 className="font-medium text-base text-gray-800">{item.menuItemName}</h3>
+                                  <p className="text-indigo-600 font-medium text-base">${item.menuItemPrice.toFixed(2)}</p>
                                 </div>
                               </div>
                               <button
                                 onClick={() => removeFromCart(index)}
-                                className="text-red-500 hover:text-red-700 transition text-lg"
+                                className="text-red-500 hover:text-red-700 transition text-base"
                               >
                                 Remove
                               </button>
@@ -288,23 +288,23 @@ function Cart() {
                           ))}
                         </div>
 
-                        <div className="border-t pt-8">
-                          <div className="flex justify-between text-xl mb-6">
+                        <div className="border-t pt-6">
+                          <div className="flex justify-between text-base mb-4">
                             <span className="font-medium">Subtotal:</span>
                             <span>${calculateTotal().toFixed(2)}</span>
                           </div>
-                          <div className="flex justify-between text-lg text-gray-500 mb-8">
+                          <div className="flex justify-between text-sm text-gray-500 mb-6">
                             <span>Delivery fee:</span>
                             <span>$2.99</span>
                           </div>
-                          <div className="flex justify-between font-bold text-2xl mb-10">
+                          <div className="flex justify-between font-bold text-lg mb-8">
                             <span>Total:</span>
                             <span>${(calculateTotal() + 2.99).toFixed(2)}</span>
                           </div>
 
                           <button
                             onClick={proceedToCheckout}
-                            className="w-full bg-green-600 text-white py-5 rounded-lg font-medium hover:bg-green-700 transition text-xl"
+                            className="w-full bg-green-600 text-white py-4 rounded-lg font-medium hover:bg-green-700 transition text-base"
                           >
                             Proceed to Checkout
                           </button>
