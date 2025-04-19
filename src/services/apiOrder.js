@@ -56,8 +56,4 @@ export const userDetailsService = {
     const response = await api.post("/userdetails/userdetails", userDetails); // Corrected endpoint
     return response.data;
   },
-  getUserDetails: async (userId) => {
-    const response = await api.get(`/userdetails/${userId}`); // Ensure backend supports this route
-    return response.data;
-  },
 };
