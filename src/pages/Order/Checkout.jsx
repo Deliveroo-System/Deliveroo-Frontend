@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { orderService, userDetailsService } from "../../services/apiOrder";
 import NavBar from "../../components/common/headerlanding";
 import Footer from "../../components/common/footerLanding";
-import chechImg from "../../assets/img/back.png";
+import { getLoggedInUser } from "../../services/authUtils";
 
 function Checkout() {
   const location = useLocation();
@@ -15,7 +15,7 @@ function Checkout() {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("You are not logged in. Redirecting to login page.");
-      navigate("/login");
+      navigate("/order/login");
     }
   }, [navigate]);
 
@@ -28,6 +28,7 @@ function Checkout() {
   });
 
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.menuItemPrice || 0), 0);
+  const user = getLoggedInUser();
 
   const handlePlaceOrder = async () => {
     try {
@@ -55,7 +56,7 @@ function Checkout() {
       // Prepare Order payload
       const orderPayload = {
         customerName: customerDetails.name,
-        customerEmail: userDetails.email,
+        customerEmail: user?.email,
         foodItems: cartItems.map((item) => ({
           name: item.menuItemName,
           quantity: 1,
@@ -73,12 +74,12 @@ function Checkout() {
 
       // Notify user of success
       alert("Order placed successfully!");
-      navigate("/cart");
+      navigate("/order/restaurant"); // Redirect to restaurant page or order confirmation page
     } catch (error) {
       console.error("Error placing order:", error);
       if (error.response?.status === 403) {
         alert("Access denied: insufficient permissions. Please log in again.");
-        navigate("/login");
+        navigate("/order/login");
       } else {
         alert(`Failed to place order: ${error.response?.data?.message || error.message}`);
       }
@@ -238,7 +239,7 @@ function Checkout() {
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                           />
                         </svg>
-                        <span className="text-sm font-medium">{userDetails.email}</span>
+                        <span className="text-sm font-medium">{user?.email}</span>
                       </div>
 
                       {/* Delivery Details Summary */}
