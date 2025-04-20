@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../../components/common/headerlanding";
 import Footer from "../../components/common/footerLanding";
+import 'animate.css';
+
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -43,7 +45,7 @@ function Cart() {
             item.restarantsIsAvailable &&
             item.menuIsAvailable &&
             item.menuItemIsAvailable &&
-            item.restaurantId === restaurantId // Filter by restaurantId
+            item.restaurantId === restaurantId
         );
         setMenuItems(approvedItems);
 
@@ -89,206 +91,183 @@ function Cart() {
       : menuItems.filter((item) => item.categoryName === activeCategory);
 
   return (
-    <div className="font-sans">
-      <NavBar />
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-8xl mx-auto px-8 py-16">
-          {restaurantDetails && (
-            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-              <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                {restaurantDetails.restaurantName}
-              </h2>
-              <p className="text-gray-600 text-lg italic mb-4">
-                {restaurantDetails.restaurantDescription}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <p className="text-gray-600">
-                  <strong>Category:</strong> {restaurantDetails.categoryName}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Address:</strong> {restaurantDetails.address}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Phone:</strong> {restaurantDetails.phoneNumber}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Email:</strong> {restaurantDetails.email || "N/A"}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Opening Hours:</strong> {restaurantDetails.openingTime} -{" "}
-                  {restaurantDetails.closingTime}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Menu:</strong> {restaurantDetails.menuName}
-                </p>
-                <p className="text-gray-600 col-span-2">
-                  <strong>Menu Description:</strong> {restaurantDetails.menuDescription}
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-col lg:flex-row gap-16">
-            {/* Menu Section */}
-            <div className="lg:w-2/3">
-              <div className="bg-white rounded-lg shadow-lg">
-                <div className="p-10 border-b">
-                  <h2 className="text-4xl font-semibold text-gray-800">
-                    Menu Items
-                  </h2>
-                  <p className="text-gray-500 mt-6 text-lg">
-                    Select your favorite dishes and add them to your cart
-                  </p>
-                </div>
-
-                {/* Category Tabs */}
-                <div className="flex overflow-x-auto p-6 bg-gray-50">
-                  {["All", ...new Set(menuItems.map((item) => item.categoryName))].map(
-                    (category) => (
-                      <button
-                        key={category}
-                        onClick={() => setActiveCategory(category)}
-                        className={`px-8 py-4 mx-3 rounded-lg whitespace-nowrap ${
-                          activeCategory === category
-                            ? "bg-indigo-600 text-white font-medium"
-                            : "bg-white text-gray-700 hover:bg-gray-100"
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    )
-                  )}
-                </div>
-
-                {/* Menu Items */}
-                <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {filteredItems.map((item) => (
-                    <div
-                      key={item.menuItemId}
-                      className="border rounded-lg overflow-hidden hover:shadow-xl transition"
-                    >
-                      <div className="h-64 overflow-hidden">
-                        <img
-                          src={item.menuItemImage}
-                          alt={item.menuItemName}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="p-8">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-semibold text-xl text-gray-800">
-                              {item.menuItemName}
-                            </h3>
-                            <p className="text-base text-gray-500 mt-4">
-                              {item.menuItemDescription}
-                            </p>
-                          </div>
-                          <span className="font-bold text-indigo-600 text-lg">
-                            ${item.menuItemPrice.toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="mt-8 flex justify-between items-center">
-                          <span className="text-sm px-4 py-2 bg-gray-100 rounded-full text-gray-600">
-                            {item.categoryName}
-                          </span>
-                          <button
-                            onClick={() =>
-                              setCartItems([...cartItems, { ...item, instructions: "" }])
-                            }
-                            className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition text-base"
-                          >
-                            Add to Cart
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Cart Section */}
-            <div className="lg:w-1/3">
-              <div className="bg-white rounded-lg shadow-lg sticky top-4">
-                <div className="p-6 border-b">
-                  <h2 className="text-2xl font-semibold text-gray-800">Your Order</h2>
-                  <p className="text-gray-500 mt-4 text-base">
-                    {cartItems.length === 0
-                      ? "Your cart is empty"
-                      : `${cartItems.length} item(s) in cart`}
-                  </p>
-                </div>
-
-                <div className="p-6">
-                  {cartItems.length === 0 ? (
-                    <div className="text-center py-12">
-                      <p className="mt-6 text-gray-500 text-base">
-                        Add some delicious items from our menu
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="space-y-6 mb-8 max-h-48 overflow-y-auto">
-                        {cartItems.map((item, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
-                          >
-                            <div className="flex items-center">
-                              <img
-                                src={item.menuItemImage}
-                                alt={item.menuItemName}
-                                className="w-16 h-16 object-cover rounded-lg mr-4"
-                              />
-                              <div>
-                                <h3 className="font-medium text-base text-gray-800">
-                                  {item.menuItemName}
-                                </h3>
-                                <p className="text-indigo-600 font-medium text-base">
-                                  ${item.menuItemPrice.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => removeFromCart(index)}
-                              className="text-red-500 hover:text-red-700 transition text-base"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="border-t pt-6">
-                        <div className="flex justify-between text-base mb-4">
-                          <span className="font-medium">Subtotal:</span>
-                          <span>${calculateTotal().toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-sm text-gray-500 mb-6">
-                          <span>Delivery fee:</span>
-                          <span>$2.99</span>
-                        </div>
-                        <div className="flex justify-between font-bold text-lg mb-8">
-                          <span>Total:</span>
-                          <span>${(calculateTotal() + 2.99).toFixed(2)}</span>
-                        </div>
-
-                        <button
-                          onClick={proceedToCheckout}
-                          className="w-full bg-green-600 text-white py-4 rounded-lg font-medium hover:bg-green-700 transition text-base"
-                        >
-                          Proceed to Checkout
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+    <div className="font-sans bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 min-h-screen">
+  <NavBar />
+  <div className="max-w-7xl mx-auto px-8 py-16">
+    {restaurantDetails && (
+      <div className="bg-gradient-to-r from-green-300 to-green-480 rounded-3xl p-10 mb-12 shadow-xl border-t-4 border-green-600 animate__animated animate__fadeIn animate__delay-1s">
+        <h2 className="text-6xl font-extrabold text-white mb-6 text-center animate__animated animate__fadeIn animate__delay-2s font-serif">
+          {restaurantDetails.restaurantName}
+        </h2>
+        <p className="text-white text-lg italic mb-8 text-center animate__animated animate__fadeIn animate__delay-3s font-serif">
+          {restaurantDetails.restaurantDescription}
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-white">
+          <div className="flex flex-col">
+            
+            <p className="animate__animated animate__fadeIn animate__delay-4s">
+              <span className="font-semibold text-white">Address:</span> {restaurantDetails.address}
+            </p>
+            <p className="animate__animated animate__fadeIn animate__delay-4s">
+              <span className="font-semibold text-white">Phone:</span> {restaurantDetails.phoneNumber}
+            </p>
+            <p className="animate__animated animate__fadeIn animate__delay-4s">
+              <span className="font-semibold text-white">Email:</span> {restaurantDetails.email || "N/A"}
+            </p>
+          </div>
+          <div className="flex flex-col">
+            <p className="animate__animated animate__fadeIn animate__delay-4s">
+              <span className="font-semibold text-white">Opening Hours:</span> {restaurantDetails.openingTime} - {restaurantDetails.closingTime}
+            </p>
+             
+             
           </div>
         </div>
       </div>
+    )}
+
+</div>
+<div className="max-w-8xl mx-auto px-14">
+  {/* Flex container for Menu Section and Cart Section */}
+  <div className="flex justify-between space-x-8"> {/* Added space-x-8 for horizontal spacing */}
+    {/* Menu Section */}
+    <div className="lg:w-3/4">
+      <div className="bg-white rounded-3xl shadow-lg border border-gray-200">
+        <div className="p-10 border-b border-gray-200 bg-indigo-50 rounded-t-3xl">
+          <h2 className="text-4xl font-semibold text-gray-800">Menu Items</h2>
+          <p className="text-gray-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
+
+          {/* Category Tabs */}
+          <div className="flex overflow-x-auto p-4 bg-white border-b border-gray-100">
+            {["All", ...new Set(menuItems.map((item) => item.categoryName))].map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-2 mx-2 text-sm rounded-full transition duration-300 ${
+                  activeCategory === category
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* Menu Items */}
+          <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {filteredItems.map((item) => (
+              <div
+                key={item.menuItemId}
+                className="border border-gray-100 rounded-2xl bg-white overflow-hidden hover:shadow-xl transition duration-300"
+              >
+                <div className="h-64 overflow-hidden bg-gray-100">
+                  <img
+                    src={item.menuItemImage}
+                    alt={item.menuItemName}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-6 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-semibold text-2xl text-gray-800">
+                      {item.menuItemName}
+                    </h3>
+                    <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
+                  </div>
+                  <div className="mt-6 flex justify-between items-center">
+                    <span className="text-indigo-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
+                    <button
+                      onClick={() =>
+                        setCartItems([...cartItems, { ...item, instructions: "" }])
+                      }
+                      className="bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 transition"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Cart Section */}
+    <div className="lg:w-1/3">
+      <div className="lg:w-2/3 p-6 bg-gradient-to-r from-green-300 to-green-500 text-white rounded-lg sticky top-4">
+        <h2 className="text-2xl font-bold mb-2">Your Order</h2>
+        <p className="mb-4">
+          {cartItems.length === 0
+            ? "Your cart is empty"
+            : `${cartItems.length} item(s) in cart`}
+        </p>
+
+        {cartItems.length === 0 ? (
+          <div className="text-center py-12 text-green-100">
+            <p>Add some delicious items from our menu</p>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2">
+              {cartItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center p-3 rounded-lg bg-green-200 bg-opacity-30 border border-green-100"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={item.menuItemImage}
+                      alt={item.menuItemName}
+                      className="w-14 h-14 object-cover rounded-lg mr-3"
+                    />
+                    <div>
+                      <h4 className="font-medium">{item.menuItemName}</h4>
+                      <span className="text-sm font-semibold">${item.menuItemPrice.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeFromCart(index)}
+                    className="text-red-100 text-sm hover:text-white"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-green-100 pt-4">
+              <div className="flex justify-between font-medium text-base mb-2">
+                <span>Subtotal:</span>
+                <span>${calculateTotal().toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm mb-4">
+                <span>Delivery fee:</span>
+                <span>$2.99</span>
+              </div>
+              <div className="flex justify-between font-bold text-xl mb-6">
+                <span>Total:</span>
+                <span>${(calculateTotal() + 2.99).toFixed(2)}</span>
+              </div>
+
+              <button
+                onClick={proceedToCheckout}
+                className="w-full bg-white text-green-700 hover:bg-green-100 py-3 rounded-full text-base font-medium transition"
+              >
+                Proceed to Checkout
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+       
       <Footer />
     </div>
   );
