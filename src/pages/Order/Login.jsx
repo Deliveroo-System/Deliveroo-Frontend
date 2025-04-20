@@ -11,7 +11,7 @@ function Login() {
     e.preventDefault();
     try {
       await authService.login({ email, password });
-      navigate("/cart");
+      navigate("/order/restaurant"); // Redirect to the restaurant page after successful login
     } catch (err) {
       alert("Login failed: " + err.response?.data?.message);
     }

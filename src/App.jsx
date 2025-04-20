@@ -10,6 +10,7 @@ import Cart from "./pages/Order/Cart";
 import Checkout from "./pages/Order/Checkout"; // Import Checkout
 import Payment from "./pages/Order/Payment"; // Import Payment
 import LoginOrder from "./pages/Order/Login";
+import Restaurant from "./pages/Order/Restaurant";
  
 import RestaurantAdd from "./features/auth/RestaurantAdd";
 import RestaurantManagerRegister from "./features/auth/RegistrationFlow";
@@ -31,11 +32,7 @@ const App = () => {
       <Route path="/auth/login/restaurant-manager" element={<UserLogin />} />
       <Route path="/register" element={<Register />} />
       <Route path="/restaurant/add" element={<RestaurantAdd />} /> 
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/order/checkout" element={<Checkout />} /> {/* Add Checkout route */}
-      <Route path="/order/payment" element={<Payment />} /> {/* Add Payment route */}
-      <Route path="/order/login" element={<LoginOrder />} /> {/* Add Order Login route */}
-      {/* Protected Routes */}
+        {/* Protected Routes */}
       {/* Admin Routes inside AdminLayout */} 
       <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
 
@@ -47,6 +44,16 @@ const App = () => {
         <Route path="payments" element={<Payments />} />
         <Route path="help" element={<Help />} />
       </Route>
+
+
+      {/* Order Routes */}
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/order/checkout" element={<Checkout />} /> {/* Add Checkout route */}
+      <Route path="/order/payment" element={<Payment />} /> {/* Add Payment route */}
+      <Route path="/order/login" element={<LoginOrder />} /> {/* Add Order Login route */}
+      <Route path="/order/restaurant" element={<Restaurant />} /> {/* Add Restaurant route */}
+
+      {/* Restaurant Routes */}
 
       {/* Admin Routes */} 
       <Route path="/admin" element={<AdminLayout />}>
