@@ -16,39 +16,50 @@ import Menus from "./pages/Restaurant/Menus";
 import Payments from "./pages/Restaurant/Payments";
 import Help from "./pages/Restaurant/Help";
 
-//Delivery pages
+// Delivery pages
 import Delivery from "./pages/Delivery/Delivery";
+
+// ✅ New imports
+import RealTimeListener from "./components/RealTimeListener";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<LandinPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/auth/login/restaurant-manager" element={<UserLogin />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/restaurant/add" element={<RestaurantAdd />} />
-      <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
+    <>
+      {/* ✅ Toast system */}
+      <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Restaurant Manager Routes */}
-      <Route path="/restaurant/dashboard" element={<RestaurantHome />}>
-        <Route index element={<RestaurantDashboard />} /> {/* Default route */}
-        <Route path="orders" element={<Orders />} />
-        <Route path="menus" element={<Menus />} />
-        <Route path="payments" element={<Payments />} />
-        <Route path="help" element={<Help />} />
-      </Route>
+      {/* ✅ WebSocket real-time listener */}
+      <RealTimeListener />
 
-      {/** Delivery Routes */ }
-      <Route path="/delivery" element={<Delivery />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandinPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/auth/login/restaurant-manager" element={<UserLogin />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/restaurant/add" element={<RestaurantAdd />} />
+        <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
 
-      {/* Restaurant Routes */}
+        {/* Restaurant Manager Routes */}
+        <Route path="/restaurant/dashboard" element={<RestaurantHome />}>
+          <Route index element={<RestaurantDashboard />} /> {/* Default route */}
+          <Route path="orders" element={<Orders />} />
+          <Route path="menus" element={<Menus />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path="help" element={<Help />} />
+        </Route>
 
-      {/* Admin Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Dashboard />} />
-      </Route>
-    </Routes>
+        {/* Delivery Routes */}
+        <Route path="/delivery" element={<Delivery />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 
