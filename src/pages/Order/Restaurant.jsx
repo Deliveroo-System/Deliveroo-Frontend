@@ -105,9 +105,10 @@ const Restaurant = () => {
                       onClick={() =>
                         navigate(`/cart`, { state: { restaurantId: restaurant.restaurantId } })
                       }
-                      className="bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition-all duration-300"
+                      className="mt-12 px-1 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-full text-lg md:text-xl transition duration-300 transform hover:scale-105 "
+                      style={{ backgroundColor: "rgba(255,88,35,255)" }}
                     >
-                      Available Menu Items
+                       Menu Items
                     </button>
                   </div>
                 </div>

@@ -91,62 +91,93 @@ function Cart() {
       : menuItems.filter((item) => item.categoryName === activeCategory);
 
   return (
-    <div className="font-sans bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 min-h-screen">
-  <NavBar />
-  <div className="max-w-7xl mx-auto px-8 py-16">
-    {restaurantDetails && (
-      <div className="bg-gradient-to-r from-green-300 to-green-480 rounded-3xl p-10 mb-12 shadow-xl border-t-4 border-green-600 animate__animated animate__fadeIn animate__delay-1s">
-        <h2 className="text-6xl font-extrabold text-white mb-6 text-center animate__animated animate__fadeIn animate__delay-2s font-serif">
-          {restaurantDetails.restaurantName}
-        </h2>
-        <p className="text-white text-lg italic mb-8 text-center animate__animated animate__fadeIn animate__delay-3s font-serif">
-          {restaurantDetails.restaurantDescription}
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-white">
-          <div className="flex flex-col">
-            
-            <p className="animate__animated animate__fadeIn animate__delay-4s">
-              <span className="font-semibold text-white">Address:</span> {restaurantDetails.address}
-            </p>
-            <p className="animate__animated animate__fadeIn animate__delay-4s">
-              <span className="font-semibold text-white">Phone:</span> {restaurantDetails.phoneNumber}
-            </p>
-            <p className="animate__animated animate__fadeIn animate__delay-4s">
-              <span className="font-semibold text-white">Email:</span> {restaurantDetails.email || "N/A"}
-            </p>
-          </div>
-          <div className="flex flex-col">
-            <p className="animate__animated animate__fadeIn animate__delay-4s">
-              <span className="font-semibold text-white">Opening Hours:</span> {restaurantDetails.openingTime} - {restaurantDetails.closingTime}
-            </p>
-             
-             
-          </div>
-        </div>
-      </div>
-    )}
+    <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 min-h-screen">
+    <NavBar />
+    
+   
+   {/* Menu Section */}
+{restaurantDetails && (
+  <div className="p-5 mb-6 animate__animated animate__fadeIn animate__delay-1s"> {/* Reduced padding and margin */}
+    <h2 className="text-6xl font-extrabold text-yellow-600 mb-3 font-serif" // Reduced margin
+      style={{
+        position: "absolute",
+        top: "px",
+        whiteSpace: "nowrap",
+        animation: "moveText 10s linear infinite"
+      }}
+    >
+      {restaurantDetails.restaurantName}
+    </h2>
 
-</div>
-<div className="max-w-8xl mx-auto px-14">
+    <style>
+      {`
+        @keyframes moveText {
+          0% { left: 100%; }
+          100% { left: -100%; }
+        }
+      `}
+    </style>
+
+
+    <div className="text-base text-yellow" style={{ position: "relative", top: "10px" , left:"3%" }}> 
+    <p className="text-yellow-800 text-lg italic justify-center  py-16 animate__animated animate__fadeIn animate__delay-1s font-serif" style={{ fontSize: "38px", position: "relative" , top: "100px" , marginLeft: "24%"  }}>  
+      {restaurantDetails.restaurantDescription}
+    </p> 
+      <div className="flex flex-col">
+        <p className="animate__animated animate__fadeIn animate__delay-2s">
+          <span className="font-semibold text-yellow-700">Address:</span> {restaurantDetails.address}
+        </p>
+        <p className="animate__animated animate__fadeIn animate__delay-2s">
+          <span className="font-semibold text-yellow-700">Phone:</span> {restaurantDetails.phoneNumber}
+        </p>
+        <p className="animate__animated animate__fadeIn animate__delay-2s">
+          <span className="font-semibold text-yellow-700">Email:</span> {restaurantDetails.email || "N/A"}
+        </p>
+      </div>
+
+      <div className="flex flex-col">
+        <p className="animate__animated animate__fadeIn animate__delay-2s">
+          <span className="font-semibold text-yellow-700">Opening Hours:</span> {restaurantDetails.openingTime} - {restaurantDetails.closingTime}
+        </p>
+      </div>
+
+      <div className="flex justify-center mt-1 py-1 gap-x-16" style={{ position: "relative", bottom: "110px" ,  transform: "translateX(-20px)" }}>  
+        <img
+          src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1470&q=80"
+          alt="Food 3"
+          className="w-60 h-60 object-cover rounded-xl shadow-lg animate__animated animate__zoomIn animate__delay-2s"
+          style={{ marginLeft: "70%" }}  
+        />
+      </div>
+    </div>
+  </div>
+)}
+
+ 
+<div className="max-w-8xl mx-auto px-14"
+style={{
+  position: "relative",
+  bottom: "100px" ,
+}}>
   {/* Flex container for Menu Section and Cart Section */}
   <div className="flex justify-between space-x-8"> {/* Added space-x-8 for horizontal spacing */}
     {/* Menu Section */}
     <div className="lg:w-3/4">
-      <div className="bg-white rounded-3xl shadow-lg border border-gray-200">
-        <div className="p-10 border-b border-gray-200 bg-indigo-50 rounded-t-3xl">
-          <h2 className="text-4xl font-semibold text-gray-800">Menu Items</h2>
-          <p className="text-gray-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
+      <div className="bg-white rounded-3xl shadow-lg border border-yellow-200">
+        <div className="p-10 border-b border-yellow-200 bg-yellow-50 rounded-t-3xl">
+          <h2 className="text-4xl font-semibold text-yellow-600">Menu Items</h2>
+          <p className="text-yellow-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
 
           {/* Category Tabs */}
-          <div className="flex overflow-x-auto p-4 bg-white border-b border-gray-100">
+          <div className="flex overflow-x-auto p-4 bg-white border-b border-yellow-100">
             {["All", ...new Set(menuItems.map((item) => item.categoryName))].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`px-6 py-2 mx-2 text-sm rounded-full transition duration-300 ${
                   activeCategory === category
-                    ? "bg-indigo-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-yellow-600 text-white shadow-md"
+                    : "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
                 }`}
               >
                 {category}
@@ -176,14 +207,14 @@ function Cart() {
                     <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
                   </div>
                   <div className="mt-6 flex justify-between items-center">
-                    <span className="text-indigo-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
+                    <span className="text-yellow-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
                     <button
                       onClick={() =>
                         setCartItems([...cartItems, { ...item, instructions: "" }])
                       }
-                      className="bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 transition"
+                      className="bg-yellow-500 text-white font-bold px-5 py-2 rounded-full hover:bg-yellow-600 transition text-lg md:text-xl transition duration-300 transform hover:scale-105 "
                     >
-                      Add to Cart
+                      Add to Cart   
                     </button>
                   </div>
                 </div>
@@ -195,8 +226,8 @@ function Cart() {
     </div>
 
     {/* Cart Section */}
-    <div className="lg:w-1/3">
-      <div className="lg:w-2/3 p-6 bg-gradient-to-r from-green-300 to-green-500 text-white rounded-lg sticky top-4">
+    <div className="lg:w-1/3" style={{ position: "relative",   left: "6%" }}>
+      <div className="lg:w-2/3 p-6 bg-gradient-to-r from-yellow-300 to-yellow-400 text-white rounded-lg sticky top-4">
         <h2 className="text-2xl font-bold mb-2">Your Order</h2>
         <p className="mb-4">
           {cartItems.length === 0
@@ -253,7 +284,7 @@ function Cart() {
 
               <button
                 onClick={proceedToCheckout}
-                className="w-full bg-white text-green-700 hover:bg-green-100 py-3 rounded-full text-base font-medium transition"
+                className="w-full bg-white text-yellow-700 hover:bg-green-100 py-3 rounded-full text-base font-medium transition"
               >
                 Proceed to Checkout
               </button>
@@ -264,12 +295,12 @@ function Cart() {
     </div>
   </div>
 </div>
-
-
+ 
 
        
       <Footer />
     </div>
+     
   );
 }
 

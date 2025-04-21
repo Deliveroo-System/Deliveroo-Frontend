@@ -91,20 +91,21 @@ function Checkout() {
   return (
     <div className="font-sans bg-gradient-to-br  min-h-screen">
       <NavBar />
+      
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
           <div className="flex flex-col lg:flex-row">
             {/* Left Section - Delivery Details */}
-            <div className="lg:w-2/3 p-6 bg-gradient-to-r from-green-300 to-green-500 text-white rounded-lg">
+            <div className="lg:w-2/3 p-6 bg-gradient-to-r from-yellow-300 to-yellow-500 text-white rounded-lg">
               <h2 className="text-4xl font-bold text-center mb-4">Complete Your Order</h2>
               <p className="text-center mb-8">Review your order and fill in your details below</p>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2 flex items-center justify-start text-gray-900">
-                    <span className="bg-green-200 p-2 rounded-md mr-3">
+                  <h3 className="text-xl font-semibold mb-2 flex items-center justify-start text-yellow-800">
+                    <span className="bg-yellow-200 p-2 rounded-md mr-3">
                       <svg
-                        className="w-5 h-5 text-green-600"
+                        className="w-5 h-5 text-yellow-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -133,7 +134,7 @@ function Checkout() {
                         name="name"
                         value={customerDetails.name}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 text-black"
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 text-black"
                         placeholder="Full Name"
                         required
                       />
@@ -142,7 +143,7 @@ function Checkout() {
                         name="phone"
                         value={customerDetails.phone}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 text-black"
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 text-black"
                         placeholder="Phone Number"
                         required
                       />
@@ -153,7 +154,7 @@ function Checkout() {
                       value={customerDetails.address}
                       onChange={handleInputChange}
                       rows="2"
-                      className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 text-black"
+                      className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 text-black"
                       placeholder="Delivery Address"
                       required
                     ></textarea>
@@ -164,7 +165,7 @@ function Checkout() {
                         name="city"
                         value={customerDetails.city}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 text-black"
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 text-black"
                         placeholder="City"
                         required
                       />
@@ -173,7 +174,7 @@ function Checkout() {
                         name="zipCode"
                         value={customerDetails.zipCode}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 text-black"
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 text-black"
                         placeholder="ZIP Code"
                         required
                       />
@@ -187,14 +188,14 @@ function Checkout() {
 <div className="lg:w-2/3 bg-gray-50 p-8 rounded-lg shadow-xl">
   <div className="sticky top-24">
     <div className="bg-white rounded-xl p-6 shadow-lg space-y-6">
-      <h3 className="text-xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
+      <h3 className="text-xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">
         Order Summary
       </h3>
       <div className="space-y-4">
         <div className="border-b pb-4">
-          <div className="flex items-center space-x-2 mb-4 text-gray-600 bg-green-50 p-3 rounded-lg">
+          <div className="flex items-center space-x-2 mb-4 text-gray-600 bg-yellow-50 p-3 rounded-lg">
             <svg
-              className="w-5 h-5 text-green-500"
+              className="w-5 h-5 text-yellow-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -206,13 +207,13 @@ function Checkout() {
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-            <span className="text-sm font-medium">{user?.email}</span>
+            <span className="text-sm font-medium text-yellow-700 bg-yellow-50">{user?.email}</span>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-            <h4 className="font-medium text-gray-700">Delivery Details</h4>
+          <div className="bg-yellow-50 p-4 rounded-lg space-y-3  text-yellow-700">
+            <h4 className="font-medium text-yellow-700">Delivery Details</h4>
             {customerDetails.name && (
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-yellow-600">
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"
@@ -230,7 +231,7 @@ function Checkout() {
               </div>
             )}
             {customerDetails.phone && (
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-yellow-600">
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"
@@ -248,7 +249,7 @@ function Checkout() {
               </div>
             )}
             {customerDetails.address && (
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-yellow-600">
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"
@@ -271,16 +272,16 @@ function Checkout() {
         {/* Display cart item images below */}
          
              
-            <div className="border-t pt-4 space-y-4 max-h-60 overflow-y-auto pr-2">
+            <div className="border-t pt-4 space-y-4 max-h-60 overflow-y-auto pr-2 bg-yellow-50 text-yellow-700">
               <h4 className="font-semibold text-lg">Selected Items:</h4>
               {cartItems.map((item, index) => (
-                <div key={index} className="flex items-center space-x-4">
+                <div key={index} className="flex items-center space-x-4 ">
                   <img
                     src={item.menuItemImage}
                     alt={item.menuItemName}
                     className="w-12 h-12 object-cover rounded-md"
                   />
-                  <div className="text-base font-medium text-gray-800">{item.menuItemName}</div>
+                  <div className="text-base font-medium text-yellow-800">{item.menuItemName}</div>
                 </div>
               ))}
             </div>
@@ -288,10 +289,10 @@ function Checkout() {
 
 
         <div className="flex justify-between items-center">
-          <span className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</span>
+          <span className="text-xl font-semibold   text-yellow-700">Total: ${totalPrice.toFixed(2)}</span>
           <button
             onClick={handlePlaceOrder}
-            className="bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700"
+            className="bg-yellow-600 text-white py-2 px-6 rounded-md hover:bg-yellow-700"
           >
             Place Order
           </button>
