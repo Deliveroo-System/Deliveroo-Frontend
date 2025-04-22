@@ -198,10 +198,13 @@ style={{
   position: "relative",
   bottom: "100px" ,
 }}>
+
+  
   {/* Flex container for Menu Section and Cart Section */}
   <div className="flex justify-between space-x-8"> {/* Added space-x-8 for horizontal spacing */}
     {/* Flex container for Categories and Menu Items */}
     <div className="flex flex-row space-x-8">
+      
       {/* Category Section */}
       <div className="w-1/4   bg-white rounded-3xl shadow-lg border border-yellow-200 p-4" style={{ position: "relative", left: "7%" , height: "700px"  }}>
         <h3 className="text-2xl font-semibold text-yellow-600 mb-4">Categories</h3>
@@ -223,9 +226,26 @@ style={{
       </div>
 
       {/* Menu Section */}
-      <div className="w-5/9" style={{ position: "relative", left: "9%" }}>  
+      <div className="w-5/9" style={{ position: "relative", left: "9%" }}> 
+          
         <div className="bg-white rounded-3xl shadow-lg border border-yellow-200">
           <div className="p-10 border-b border-yellow-200 bg-yellow-50 rounded-t-3xl">
+             {/* Progress Steps */}
+             <div className="flex justify-between mb-8">
+                  <div className="flex flex-col items-center">
+                    <div className="w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                    <span className="mt-2 text-xs font-medium text-yellow-600">Cart</span>
+                  </div>
+                  <div className="w-full border-t-2 border-yellow-200 my-auto mx-2"></div>
+                  <div className="flex flex-col items-center">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-yellow-500 font-bold">2</div>
+                    <span className="mt-2 text-xs font-medium text-yellow-500">Details</span>
+                  </div>
+                  <div className="w-full border-t-2 border-yellow-200 my-auto mx-2"></div>
+                  <div className="flex flex-col items-center">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-yellow-500 font-bold">3</div>
+                    <span className="mt-2 text-xs font-medium text-yellow-500">Confirmation</span>
+                  </div></div>
             <h2 className="text-4xl font-semibold text-yellow-600">Menu Items</h2>
             <p className="text-yellow-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
           </div>
@@ -388,7 +408,80 @@ style={{
 </div>
  
 
-       
+<div>
+       {/* Trust Badges */}
+       <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
+            <div className="p-2 bg-orange-100 rounded-full">
+              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-medium text-orange-900 text-sm">Secure Payment</h4>
+              <p className="text-xs text-orange-700">SSL Encrypted</p>
+            </div>
+          </div>
+          
+          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
+            <div className="p-2 bg-orange-100 rounded-full">
+              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-medium text-orange-900 text-sm">Fast Delivery</h4>
+              <p className="text-xs text-orange-700">30-45 minutes</p>
+            </div>
+          </div>
+          
+          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
+            <div className="p-2 bg-orange-100 rounded-full">
+              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-medium text-orange-900 text-sm">Quality Guarantee</h4>
+              <p className="text-xs text-orange-700">Fresh ingredients</p>
+            </div>
+          </div>
+          
+          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
+            <div className="p-2 bg-orange-100 rounded-full">
+              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-medium text-orange-900 text-sm">24/7 Support</h4>
+              <p className="text-xs text-orange-700">Always here to help</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+      `}</style>
+
+      <br></br>
       <Footer />
     </div>
      
