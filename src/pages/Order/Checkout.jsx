@@ -103,16 +103,16 @@ function Checkout() {
     <div className="font-sans bg-gradient-to-br  min-h-screen">
       <NavBar />
       
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12" >
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8"style={{ position: "relative", width: "140%" , right:"20%" }} >
-          <div className="flex flex-col lg:flex-row " >
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8"  >
+          <div className="flex flex-col lg:flex-row">
             {/* Left Section - Delivery Details */}
-            <div className="lg:w-1/2 p-6 bg-gradient-to-r from-yellow-300 to-yellow-400 text-white rounded-lg" style={{ position: "relative", width: "1000%", height: "100%" }}>
+            <div className="lg:w-2/3 p-6 bg-gradient-to-r from-yellow-300 to-yellow-500 text-white rounded-lg" >
               <h2 className="text-4xl font-bold text-center mb-4">Complete Your Order</h2>
               <p className="text-center mb-8">Review your order and fill in your details below</p>
 
-              <div className="space-y-6 ">
-                <div >
+              <div className="space-y-6">
+                <div>
                   <h3 className="text-xl font-semibold mb-2 flex items-center justify-start text-yellow-800">
                     <span className="bg-yellow-200 p-2 rounded-md mr-3">
                       <svg
