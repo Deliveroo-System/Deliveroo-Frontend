@@ -85,10 +85,49 @@ function Cart() {
     }
   }, [restaurantId]);
 
+  const generateDynamicCategories = (menuItems) => {
+    const categories = {};
+
+    menuItems.forEach((item) => {
+      let category = "Others"; // Default category
+      if (item.menuItemName.toLowerCase().includes("drink") || item.menuItemName.toLowerCase().includes("coffee")) {
+        category = "Drinks";
+      } else if (item.menuItemName.toLowerCase().includes("burger")) {
+        category = "Burgers";
+      } else if (item.menuItemName.toLowerCase().includes("salad")) {
+        category = "Salads";
+      } else if (item.menuItemName.toLowerCase().includes("sandwich") || item.menuItemName.toLowerCase().includes("wrap")) {
+        category = "Sandwiches";
+      } else if (item.menuItemName.toLowerCase().includes("pizza")) {
+        category = "Pizza";
+      } else if (item.menuItemName.toLowerCase().includes("breakfast") || item.menuItemName.toLowerCase().includes("egg") || item.menuItemName.toLowerCase().includes("toast")) {
+        category = "Breakfast";
+      } else if (item.menuItemName.toLowerCase().includes("dinner") || item.menuItemName.toLowerCase().includes("steak") || item.menuItemName.toLowerCase().includes("fish") || item.menuItemName.toLowerCase().includes("ribs")) {
+        category = "Dinner";
+      } else if (item.menuItemName.toLowerCase().includes("dessert") || item.menuItemName.toLowerCase().includes("cake") || item.menuItemName.toLowerCase().includes("ice cream")) {
+        category = "Desserts";
+      }
+
+      if (!categories[category]) {
+        categories[category] = [];
+      }
+      categories[category].push(item);
+    });
+
+    return categories;
+  };
+
+  const categorizedMenuItems = generateDynamicCategories(menuItems);
+
+  // Combine all categories into a single list for tabs
+  const allCategories = ["All", "Fine Dining", ...Object.keys(categorizedMenuItems)];
+
   const filteredItems =
     activeCategory === "All"
       ? menuItems
-      : menuItems.filter((item) => item.categoryName === activeCategory);
+      : activeCategory === "Fine Dining"
+      ? menuItems.filter((item) => item.categoryName === "Fine Dining")
+      : categorizedMenuItems[activeCategory] || [];
 
   return (
     <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 min-h-screen">
@@ -161,72 +200,124 @@ style={{
 }}>
   {/* Flex container for Menu Section and Cart Section */}
   <div className="flex justify-between space-x-8"> {/* Added space-x-8 for horizontal spacing */}
-    {/* Menu Section */}
-    <div className="lg:w-3/4">
-      <div className="bg-white rounded-3xl shadow-lg border border-yellow-200">
-        <div className="p-10 border-b border-yellow-200 bg-yellow-50 rounded-t-3xl">
-          <h2 className="text-4xl font-semibold text-yellow-600">Menu Items</h2>
-          <p className="text-yellow-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
+    {/* Flex container for Categories and Menu Items */}
+    <div className="flex flex-row space-x-8">
+      {/* Category Section */}
+      <div className="w-1/4   bg-white rounded-3xl shadow-lg border border-yellow-200 p-4" style={{ position: "relative", left: "7%" , height: "700px"  }}>
+        <h3 className="text-2xl font-semibold text-yellow-600 mb-4">Categories</h3>
+        <div className="flex flex-col space-y-4">
+          {allCategories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-4 py-2 text-sm rounded-full transition duration-300 ${
+                activeCategory === category
+                  ? "bg-yellow-600 text-white shadow-md"
+                  : "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          {/* Category Tabs */}
-          <div className="flex overflow-x-auto p-4 bg-white border-b border-yellow-100">
-            {["All", ...new Set(menuItems.map((item) => item.categoryName))].map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2 mx-2 text-sm rounded-full transition duration-300 ${
-                  activeCategory === category
-                    ? "bg-yellow-600 text-white shadow-md"
-                    : "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+      {/* Menu Section */}
+      <div className="w-5/9" style={{ position: "relative", left: "9%" }}>  
+        <div className="bg-white rounded-3xl shadow-lg border border-yellow-200">
+          <div className="p-10 border-b border-yellow-200 bg-yellow-50 rounded-t-3xl">
+            <h2 className="text-4xl font-semibold text-yellow-600">Menu Items</h2>
+            <p className="text-yellow-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
           </div>
 
           {/* Menu Items */}
-          <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
-            {filteredItems.map((item) => (
-              <div
-                key={item.menuItemId}
-                className="border border-gray-100 rounded-2xl bg-white overflow-hidden hover:shadow-xl transition duration-300"
-              >
-                <div className="h-64 overflow-hidden bg-gray-100">
-                  <img
-                    src={item.menuItemImage}
-                    alt={item.menuItemName}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-semibold text-2xl text-gray-800">
-                      {item.menuItemName}
-                    </h3>
-                    <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
-                  </div>
-                  <div className="mt-6 flex justify-between items-center">
-                    <span className="text-yellow-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
-                    <button
-                      onClick={() =>
-                        setCartItems([...cartItems, { ...item, instructions: "" }])
-                      }
-                      className="bg-yellow-500 text-white font-bold px-5 py-2 rounded-full hover:bg-yellow-600 transition text-lg md:text-xl transition duration-300 transform hover:scale-105 "
+          <div className="p-10 space-y-12" >
+            {activeCategory === "All"
+              ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {menuItems.map((item) => (
+                    <div
+                      key={item.menuItemId}
+                      className="border border-gray-100 rounded-2xl bg-white overflow-hidden hover:shadow-xl transition duration-300"
                     >
-                      Add to Cart   
-                    </button>
-                  </div>
+                      <div className="h-64 overflow-hidden bg-gray-100">
+                        <img
+                          src={item.menuItemImage}
+                          alt={item.menuItemName}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <div className="p-6 flex flex-col justify-between">
+                        <div>
+                          <h3 className="font-semibold text-2xl text-gray-800">
+                            {item.menuItemName}
+                          </h3>
+                          <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
+                        </div>
+                        <div className="mt-6 flex justify-between items-center">
+                          <span className="text-yellow-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
+                          <button
+                            onClick={() =>
+                              setCartItems([...cartItems, { ...item, instructions: "" }])
+                            }
+                            className="bg-yellow-500 text-white font-bold px-5 py-2 rounded-full hover:bg-yellow-600 transition text-lg md:text-xl transition duration-300 transform hover:scale-105 "
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
+              )
+              : filteredItems.map((item) => (
+                  <div
+                    key={item.menuItemId}
+                    className={`border border-gray-100 rounded-2xl bg-white overflow-hidden hover:shadow-xl transition duration-300 ${
+                      activeCategory !== "All" ? "w-full h-auto" : ""
+                    }`} // Further increase size for selected categories
+                  >
+                    <div
+                      className={`${
+                        activeCategory !== "All" ? "h-[28rem]" : "h-64"
+                      } overflow-hidden bg-gray-100`} // Further adjust height for selected categories
+                    >
+                      <img
+                        src={item.menuItemImage}
+                        alt={item.menuItemName}
+                        className={`w-full h-full object-cover ${
+                          activeCategory !== "All" ? "hover:scale-115" : "hover:scale-105"
+                        } transition-transform duration-300`} // Further adjust hover scale
+                      />
+                    </div>
+                    <div className="p-6 flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-semibold text-2xl text-gray-800">
+                          {item.menuItemName}
+                        </h3>
+                        <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
+                      </div>
+                      <div className="mt-6 flex justify-between items-center">
+                        <span className="text-yellow-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
+                        <button
+                          onClick={() =>
+                            setCartItems([...cartItems, { ...item, instructions: "" }])
+                          }
+                          className="bg-yellow-500 text-white font-bold px-5 py-2 rounded-full hover:bg-yellow-600 transition text-lg md:text-xl transition duration-300 transform hover:scale-105 "
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
       </div>
     </div>
 
     {/* Cart Section */}
-    <div className="lg:w-1/3" style={{ position: "relative",   left: "6%" }}>
+    <div className="lg:w-1/3" style={{ position: "relative", left: "7%" }}> {/* Adjusted left position */}
       <div className="lg:w-2/3 p-6 bg-gradient-to-r from-yellow-300 to-yellow-400 text-white rounded-lg sticky top-4">
         <h2 className="text-2xl font-bold mb-2">Your Order</h2>
         <p className="mb-4">
@@ -284,7 +375,7 @@ style={{
 
               <button
                 onClick={proceedToCheckout}
-                className="w-full bg-white text-yellow-700 hover:bg-green-100 py-3 rounded-full text-base font-medium transition"
+                className="w-full bg-white text-yellow-700 hover:bg-yellow-100 py-3 rounded-full text-base font-medium transition"
               >
                 Proceed to Checkout
               </button>
