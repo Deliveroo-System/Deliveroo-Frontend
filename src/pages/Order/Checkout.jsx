@@ -30,6 +30,17 @@ function Checkout() {
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.menuItemPrice || 0), 0);
   const user = getLoggedInUser();
 
+  // Group cart items by name and calculate quantities
+  const groupedCartItems = cartItems.reduce((acc, item) => {
+    const existingItem = acc.find((i) => i.menuItemName === item.menuItemName);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      acc.push({ ...item, quantity: 1 });
+    }
+    return acc;
+  }, []);
+
   const handlePlaceOrder = async () => {
     try {
       const userDetailsPayload = {
@@ -92,16 +103,16 @@ function Checkout() {
     <div className="font-sans bg-gradient-to-br  min-h-screen">
       <NavBar />
       
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
-          <div className="flex flex-col lg:flex-row">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12" >
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8"style={{ position: "relative", width: "140%" , right:"20%" }} >
+          <div className="flex flex-col lg:flex-row " >
             {/* Left Section - Delivery Details */}
-            <div className="lg:w-2/3 p-6 bg-gradient-to-r from-yellow-300 to-yellow-500 text-white rounded-lg">
+            <div className="lg:w-1/2 p-6 bg-gradient-to-r from-yellow-300 to-yellow-400 text-white rounded-lg" style={{ position: "relative", width: "1000%", height: "100%" }}>
               <h2 className="text-4xl font-bold text-center mb-4">Complete Your Order</h2>
               <p className="text-center mb-8">Review your order and fill in your details below</p>
 
-              <div className="space-y-6">
-                <div>
+              <div className="space-y-6 ">
+                <div >
                   <h3 className="text-xl font-semibold mb-2 flex items-center justify-start text-yellow-800">
                     <span className="bg-yellow-200 p-2 rounded-md mr-3">
                       <svg
@@ -211,61 +222,41 @@ function Checkout() {
           </div>
 
           <div className="bg-yellow-50 p-4 rounded-lg space-y-3  text-yellow-700">
-            <h4 className="font-medium text-yellow-700">Delivery Details</h4>
-            {customerDetails.name && (
-              <div className="flex items-center text-sm text-yellow-600">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 01-7-7V7a7 7 0 017-7h0a7 7 0 017 7v0a7 7 0 01-7 7z"
-                  />
-                </svg>
-                {customerDetails.name}
-              </div>
-            )}
-            {customerDetails.phone && (
-              <div className="flex items-center text-sm text-yellow-600">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                {customerDetails.phone}
-              </div>
-            )}
-            {customerDetails.address && (
-              <div className="flex items-center text-sm text-yellow-600">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                {customerDetails.address}
-              </div>
-            )}
+          <h4 className="font-medium text-yellow-700">Delivery Details</h4>
+
+{customerDetails.name && (
+  <div className="flex items-center text-sm text-yellow-600">
+    {/* User Icon */}
+    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+        d="M5.121 17.804A4 4 0 019 16h6a4 4 0 013.879 1.804M12 12a4 4 0 100-8 4 4 0 000 8z" />
+    </svg>
+    {customerDetails.name}
+  </div>
+)}
+
+{customerDetails.phone && (
+  <div className="flex items-center text-sm text-yellow-600">
+    {/* Phone Icon */}
+    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+        d="M3 5a2 2 0 012-2h2l2 4-2 2a16 16 0 006 6l2-2 4 2v2a2 2 0 01-2 2h-1c-7.18 0-13-5.82-13-13V5z" />
+    </svg>
+    {customerDetails.phone}
+  </div>
+)}
+
+{customerDetails.address && (
+  <div className="flex items-center text-sm text-yellow-600">
+    {/* Location Icon */}
+    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+        d="M12 11c1.656 0 3-1.344 3-3S13.656 5 12 5 9 6.344 9 8s1.344 3 3 3zM12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z" />
+    </svg>
+    {customerDetails.address}
+  </div>
+)}
+
           </div>
         </div>
 
@@ -274,14 +265,16 @@ function Checkout() {
              
             <div className="border-t pt-4 space-y-4 max-h-60 overflow-y-auto pr-2 bg-yellow-50 text-yellow-700">
               <h4 className="font-semibold text-lg">Selected Items:</h4>
-              {cartItems.map((item, index) => (
-                <div key={index} className="flex items-center space-x-4 ">
+              {groupedCartItems.map((item, index) => (
+                <div key={index} className="flex items-center space-x-4">
                   <img
                     src={item.menuItemImage}
                     alt={item.menuItemName}
                     className="w-12 h-12 object-cover rounded-md"
                   />
-                  <div className="text-base font-medium text-yellow-800">{item.menuItemName}</div>
+                  <div className="text-base font-medium text-yellow-800">
+                    {item.menuItemName} (Quantity - {item.quantity})
+                  </div>
                 </div>
               ))}
             </div>
