@@ -120,13 +120,13 @@ function Cart() {
   const categorizedMenuItems = generateDynamicCategories(menuItems);
 
   // Combine all categories into a single list for tabs
-  const allCategories = ["All", "Fine Dining", ...Object.keys(categorizedMenuItems)];
+  const allCategories = ["All" , ...Object.keys(categorizedMenuItems)];
 
   const filteredItems =
     activeCategory === "All"
       ? menuItems
       : activeCategory === "Fine Dining"
-      ? menuItems.filter((item) => item.categoryName === "Fine Dining")
+      ? menuItems.filter((item) => item.categoryName  )
       : categorizedMenuItems[activeCategory] || [];
 
   return (
