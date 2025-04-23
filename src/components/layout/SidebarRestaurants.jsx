@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import {
   FaBars,
   FaTachometerAlt,
@@ -17,7 +19,7 @@ const navItems = [
   { name: "Payments", icon: <FaCreditCard />, path: "payments" },
   { name: "Help", icon: <FaQuestionCircle />, path: "help" },
 ];
-
+const MySwal = withReactContent(Swal);
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();

@@ -24,7 +24,7 @@ export default function Menus() {
         `http://localhost:8080/api/Restaurant/get-restaurant-menu/${restaurantId}`,
         { headers }
       );
-      const approvedMenus = response.data.filter((menu) => menu.isApproved);
+      const approvedMenus = response.data.filter((menu) => menu.menuApproved);
       setMenus(approvedMenus);
     } catch (error) {
       console.error("Error fetching menus:", error);
@@ -173,6 +173,7 @@ export default function Menus() {
           price: parseFloat(document.getElementById("item-price").value),
           imageUrl: document.getElementById("item-image").value,
           isAvailable: document.getElementById("item-available").checked,
+          isApproved: false // Add this line
         };
       },
     });
@@ -342,6 +343,7 @@ export default function Menus() {
           price: parseFloat(document.getElementById("item-price").value),
           imageUrl: document.getElementById("item-image").value,
           isAvailable: document.getElementById("item-available").checked,
+          isApproved: item.isApproved 
         };
       },
     });
@@ -401,14 +403,24 @@ export default function Menus() {
         `http://localhost:8080/api/restaurant/menu/MenuItems/${restaurantId}/menus/${menuId}/items`,
         { headers }
       );
-      
-      // Always set the selected menu ID first
+      console.log(menuId)
       setSelectedMenuId(menuId);
       
       if (response.data && response.data.length > 0) {
-        setMenuItems(response.data);
+        // Filter to only show approved items
+        const approvedItems = response.data.filter(item => item.isApproved);
+        setMenuItems(approvedItems);
+        
+        if (approvedItems.length === 0) {
+          MySwal.fire({
+            title: "No Approved Items Found",
+            text: "This menu currently has no approved items.",
+            icon: "info",
+            confirmButtonText: "OK"
+          });
+        }
       } else {
-        setMenuItems([]); // Clear any existing items
+        setMenuItems([]);
         MySwal.fire({
           title: "No Items Found",
           text: "This menu currently has no items.",
@@ -418,10 +430,9 @@ export default function Menus() {
       }
     } catch (error) {
       console.error("Error fetching menu items:", error);
-      setMenuItems([]); // Clear items on error too
-      setSelectedMenuId(null); // Optionally clear selection on error
+      setMenuItems([]);
+      setSelectedMenuId(null);
       MySwal.fire({
-        
         text: "No menu items For This",
         icon: "error",
         confirmButtonText: "OK"
@@ -514,6 +525,7 @@ export default function Menus() {
           menuName: document.getElementById("menu-name").value,
           description: document.getElementById("menu-desc").value,
           isActive: document.getElementById("menu-active").checked,
+          isApproved: false 
         };
       },
       didOpen: () => {
@@ -592,7 +604,7 @@ export default function Menus() {
                 type="checkbox" 
                 id="menu-active" 
                 style="opacity: 0; width: 0; height: 0;"
-                ${menu.isAvailable ? 'checked' : ''}
+                ${menu.isActive ? 'checked' : ''}
               />
               <span style="
                 position: absolute;
@@ -601,7 +613,7 @@ export default function Menus() {
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: ${menu.isAvailable ? '#FF5823' : '#ccc'};
+                background-color: ${menu.isActive ? '#FF5823' : '#ccc'};
                 transition: .4s;
                 border-radius: 34px;
               "></span>
@@ -609,7 +621,7 @@ export default function Menus() {
                 position: absolute;
                 height: 18px;
                 width: 18px;
-                left: ${menu.isAvailable ? '26px' : '4px'};
+                left: ${menu.isActive ? '26px' : '4px'};
                 bottom: 4px;
                 background-color: white;
                 transition: .4s;
@@ -645,6 +657,7 @@ export default function Menus() {
           menuName: document.getElementById("menu-name").value,
           description: document.getElementById("menu-desc").value,
           isActive: document.getElementById("menu-active").checked,
+          isActive: menu.isActive // Preserve existing approval status
         };
       },
       didOpen: () => {
@@ -749,12 +762,12 @@ export default function Menus() {
               <div className="mt-2">
                 <span
                   className={`inline-block text-xs font-semibold px-2 py-1 rounded-full ${
-                    menu.isAvailable
+                    menu.isActive
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-700"
                   }`}
                 >
-                  {menu.isAvailable ? "Active" : "Inactive"}
+                  {menu.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
             </div>
