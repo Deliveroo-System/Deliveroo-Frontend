@@ -16,10 +16,13 @@ import Menus from "./pages/Restaurant/Menus";
 import Payments from "./pages/Restaurant/Payments";
 import Help from "./pages/Restaurant/Help";
 
-// Delivery pages
-import Delivery from "./pages/Delivery/Delivery";
+// Delivery pages - Updated imports
+import DeliveryDashboard from "./pages/Delivery/DriverDashboard";
+import DeliveryLogin from "./pages/Delivery/DeliveryLogin";
+import DeliveryView from "./pages/Delivery/DriverView";
+import DeliveryTracking from "./pages/Delivery/DeliveryTracking";
 
-// ✅ New imports
+// Shared components
 import RealTimeListener from "./components/RealTimeListener";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,10 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   return (
     <>
-      {/* ✅ Toast system */}
       <ToastContainer position="top-right" autoClose={3000} />
-
-      {/* ✅ WebSocket real-time listener */}
       <RealTimeListener />
 
       <Routes>
@@ -42,19 +42,23 @@ const App = () => {
         <Route path="/restaurant/add" element={<RestaurantAdd />} />
         <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
 
-        {/* Restaurant Manager Routes */}
+        {/* Restaurant Manager Routes (unchanged) */}
         <Route path="/restaurant/dashboard" element={<RestaurantHome />}>
-          <Route index element={<RestaurantDashboard />} /> {/* Default route */}
+          <Route index element={<RestaurantDashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="menus" element={<Menus />} />
           <Route path="payments" element={<Payments />} />
           <Route path="help" element={<Help />} />
         </Route>
 
-        {/* Delivery Routes */}
-        <Route path="/delivery" element={<Delivery />} />
+        {/* ✅ Enhanced Delivery Routes */}
+        <Route path="/delivery/login" element={<DeliveryLogin />} />
+        <Route path="/delivery/dashboard" element={<DeliveryDashboard />} />
+        <Route path="/delivery/orders/:orderId" element={<DeliveryView />} />
+        <Route path="/delivery/tracking/:orderId" element={<DeliveryTracking />} />
+        
 
-        {/* Admin Routes */}
+        {/* Admin Routes (unchanged) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
         </Route>
