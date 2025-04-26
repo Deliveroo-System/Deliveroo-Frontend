@@ -80,7 +80,7 @@ const RestaurantAdd = () => {
       })
       .then(() => {
         toast.success("🎉 Restaurant added successfully!");
-        setTimeout(() => navigate("/restaurant-manager"), 2000);
+        setTimeout(() => navigate("auth/login/restaurant-manager"), 2000);
       })
       .catch((err) => {
         Swal.fire({
@@ -219,7 +219,7 @@ const RestaurantAdd = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-[#FF5823] text-white py-3 px-6 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all duration-300 shadow-md"
+              className="w-full p-3 bg-gray-900 text-white font-bold rounded-md hover:bg-gray-800 transition duration-200 shadow-md"
             >
               Submit Restaurant
             </button>

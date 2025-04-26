@@ -28,14 +28,16 @@ const LoginPage = () => {
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.token);
+      localStorage.setItem("restaurantId", response.restaurantId);
       localStorage.setItem("role", response.role);
+
       if (rememberMe) {
         localStorage.setItem("savedEmail", email);
       } else {
         localStorage.removeItem("savedEmail");
       }
       if (response.role === "RestaurantOwner") {
-        navigate("/admin-dashboard");
+        navigate("/restaurant/dashboard");
       } else {
         setError("Invalid credentials");
         Swal.fire("Error", "Invalid credentials", "error");

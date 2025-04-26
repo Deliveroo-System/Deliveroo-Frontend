@@ -35,7 +35,7 @@ const PromoRibbon = () => {
                 <p>Service and delivery fees may apply. See terms for details.</p>
               </div>
               
-              <button className="mt-8 px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-full text-lg md:text-xl transition duration-300 transform hover:scale-105">
+              <button className="mt-8 px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-full text-lg md:text-xl transition duration-300 transform hover:scale-105"style={{ backgroundColor: "rgba(255,88,35,255)" }}>
                 Order Now →
               </button>
             </div>
