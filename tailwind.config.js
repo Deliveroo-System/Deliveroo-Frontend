@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -9,9 +10,9 @@ export default {
         secondary: '#8AB2A6',
         accent: '#ACD3A8',
         rand: '#FF5823',
-        deliveroo: '#007e89', // 👈 Added custom color name
-      }
-    }
+        deliveroo: '#007e89', // Custom color added
+      },
+    },
   },
   plugins: [],
 }
