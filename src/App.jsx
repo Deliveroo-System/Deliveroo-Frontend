@@ -14,6 +14,9 @@ import Restaurant from "./pages/Order/Restaurant";
  
 import RestaurantAdd from "./features/auth/RestaurantAdd";
 import RestaurantManagerRegister from "./features/auth/RegistrationFlow";
+
+import CheckoutPage from './pages/payment/CheckoutPage';
+
 import RestaurantHome from "./pages/Restaurant/HomeRestaurants";
 
 // Restaurant pages
@@ -24,6 +27,7 @@ import Payments from "./pages/Restaurant/Payments";
 import Help from "./pages/Restaurant/Help";
 
 import AdminRestaurantManagement from "./pages/admin/AdminRestaurantManagement"
+
 
 const App = () => {
   return (
@@ -37,6 +41,9 @@ const App = () => {
         {/* Protected Routes */}
       {/* Admin Routes inside AdminLayout */} 
       <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
+
+      <Route path="/checkout" element={<CheckoutPage />} />
+
 
       {/* Restaurant Manager Routes */}
       <Route path="/restaurant/dashboard" element={<RestaurantHome />}>
