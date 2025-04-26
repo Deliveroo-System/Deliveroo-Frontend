@@ -22,7 +22,9 @@ import Orders from "./pages/Restaurant/Orders";
 import Menus from "./pages/Restaurant/Menus";
 import Payments from "./pages/Restaurant/Payments";
 import Help from "./pages/Restaurant/Help";
- 
+
+import AdminRestaurantManagement from "./pages/admin/AdminRestaurantManagement"
+
 const App = () => {
   return (
     <Routes>
@@ -58,6 +60,7 @@ const App = () => {
       {/* Admin Routes */} 
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
+        <Route path="restaurants" element={<AdminRestaurantManagement />} />
       </Route>
     </Routes>
   );
