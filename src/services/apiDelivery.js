@@ -1,42 +1,76 @@
 import axios from "axios";
-import { io } from "socket.io-client";
 
-// Axios Setup
-const API = axios.create({
-  baseURL: "http://localhost:3000/api", // Replace with your backend URL
+const API_BASE_URL = "http://localhost:3000/api"; // Backend base URL
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Add Authorization header if token exists
-API.interceptors.request.use((req) => {
+// Add token to requests
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  return req;
+  return config;
 });
 
-// WebSocket Setup
-const socket = io("http://localhost:3000"); // Replace with your backend URL
-
-// Example Usage of Axios
-export const fetchData = async (endpoint) => {
-  try {
-    const response = await API.get(endpoint);
+// Authentication Service
+export const authService = {
+  login: async (credentials) => {
+    const response = await api.post("/drivers/login", credentials);
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+    }
     return response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error.response?.data || error.message);
-    throw error;
-  }
+  },
+  register: async (userData) => {
+    const response = await api.post("/drivers/register", userData);
+    return response.data;
+  },
 };
 
-// Example Usage of WebSocket
-export const setupSocketListeners = (event, callback) => {
-  socket.on(event, callback);
-
-  // Cleanup listener
-  return () => {
-    socket.off(event);
-  };
+// Delivery Service
+export const deliveryService = {
+  createDelivery: async (deliveryData) => {
+    const response = await api.post("/deliveries", deliveryData);
+    return response.data;
+  },
+  assignDriver: async (deliveryId, driverData) => {
+    const response = await api.put("/deliveries/assign", {
+      deliveryId,
+      ...driverData,
+    });
+    return response.data;
+  },
+  markAsDelivered: async (deliveryId) => {
+    const response = await api.put("/deliveries/deliver", { deliveryId });
+    return response.data;
+  },
+  updateDeliveryStatus: async (deliveryId, status) => {
+    const response = await api.put("/deliveries/status", { deliveryId, status });
+    return response.data;
+  },
+  getAllDeliveries: async () => {
+    const response = await api.get("/deliveries");
+    return response.data;
+  },
 };
 
-export { API, socket };
+// Driver Service
+export const driverService = {
+  registerDriver: async (driverData) => {
+    const response = await api.post("/drivers/register", driverData);
+    return response.data;
+  },
+  loginDriver: async (credentials) => {
+    const response = await api.post("/drivers/login", credentials);
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+    }
+    return response.data;
+  },
+};

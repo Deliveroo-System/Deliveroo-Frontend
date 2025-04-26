@@ -18,6 +18,7 @@ import Help from "./pages/Restaurant/Help";
 
 //Delivery pages
 import Delivery from "./pages/Delivery/Delivery";
+import DriverLogin from "./pages/Delivery/DriverLogin";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
 
       {/** Delivery Routes */ }
       <Route path="/delivery" element={<Delivery />} />
+      <Route path="/delivery/login" element={<DriverLogin />} />
 
       {/* Restaurant Routes */}
 
