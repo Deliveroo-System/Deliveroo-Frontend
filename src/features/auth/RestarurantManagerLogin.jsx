@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   // Random food image from Unsplash (different each time)
   const unsplashImage =
-    "https://images.unsplash.com/photo-1621972750749-0fbb1abb7736?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+    "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-7a60-61f7-b9b2-990f73e9c215/raw?se=2025-04-26T08%3A23%3A06Z&sp=r&sv=2024-08-04&sr=b&scid=3554c264-6094-53e7-b87a-681c9cf0aac1&skoid=ae70be19-8043-4428-a990-27c58b478304&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-26T06%3A29%3A23Z&ske=2025-04-27T06%3A29%3A23Z&sks=b&skv=2024-08-04&sig=iTfn4Dat20zTEAu6lqHp15qsNtGF7xpvwGuwuhz9KPs%3D";
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("savedEmail");
