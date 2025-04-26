@@ -12,9 +12,13 @@ export default function DriverLogin() {
     e.preventDefault();
     try {
       const response = await authService.login({ email, password });
+      if(response){
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("driverId",response.driver.id)
+      }
       alert('Login successful!');
       console.log('Token:', response.token);
-      navigate('/delivery');
+  navigate('/delivery');
     } catch (err) {
       setError('Invalid email or password');
     }

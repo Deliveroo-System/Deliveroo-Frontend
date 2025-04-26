@@ -22,9 +22,7 @@ api.interceptors.request.use((config) => {
 export const authService = {
   login: async (credentials) => {
     const response = await api.post("/drivers/login", credentials);
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
-    }
+    
     return response.data;
   },
   register: async (userData) => {
@@ -82,4 +80,9 @@ export const driverService = {
     }
     return response.data;
   },
+  findDriverById:async()=>{
+    const driverId=localStorage.getItem("driverId")
+    const response  = await api.get("/drivers/"+driverId);
+    return response.data;
+  }
 }
