@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deliveryService } from '../../services/apiDelivery';
-import { authService } from '../../services/apiDelivery';
+import { deliveryService } from '../../services/apiDelivery'; // Import deliveryService
 
 export default function Delivery() {
   const [orders, setOrders] = useState([
@@ -52,25 +51,11 @@ export default function Delivery() {
     },
   ]);
 
-  const [loggedUser, setLoggedUser] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchLoggedUser = async () => {
-      try {
-        const user = await authService.getLoggedUser();
-        console.log('Fetched Logged User:', user); // <-- Add console here
-        setLoggedUser(user);
-      } catch (error) {
-        console.error('Failed to fetch logged user:', error);
-      }
-    };
-    fetchLoggedUser();
-  }, []);
 
   const handleButtonClick = async (id) => {
     const order = orders.find((o) => o.id === id);
-    if (!order || !loggedUser) return;
+    if (!order) return;
 
     try {
       const deliveryData = {
@@ -81,14 +66,11 @@ export default function Delivery() {
         items: order.items,
         restaurantId: order.restaurantId,
         restaurantLocation: order.restaurantLocation,
-        driver: loggedUser.displayName,
-        driverDetails: loggedUser.email,
+        driver: order.driver,
         createdBy: order.createdBy,
       };
 
-      console.log('Logged User at click:', loggedUser); // <-- Add console here
-      console.log('Delivery Data:', deliveryData); // <-- Add console here
-
+      // Call the createDelivery API
       await deliveryService.createDelivery(deliveryData);
 
       alert(`Order ${id} marked as delivered and saved to the database!`);

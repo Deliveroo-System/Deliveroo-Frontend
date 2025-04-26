@@ -31,6 +31,15 @@ export const authService = {
     const response = await api.post("/drivers/register", userData);
     return response.data;
   },
+  getLoggedUser: async () => {
+    try {
+      const response = await api.get("/drivers/me"); // Replace "/drivers/me" with the actual endpoint if different
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching logged user:", error.response || error.message);
+      throw new Error("Failed to fetch logged user. Please check the API endpoint.");
+    }
+  },
 };
 
 // Delivery Service
@@ -73,4 +82,4 @@ export const driverService = {
     }
     return response.data;
   },
-};
+}
