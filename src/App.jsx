@@ -19,6 +19,7 @@ import Help from "./pages/Restaurant/Help";
 //Delivery pages
 import Delivery from "./pages/Delivery/Delivery";
 import DriverLogin from "./pages/Delivery/DriverLogin";
+import OrderConfirm from "./pages/Delivery/orderConfirm";
 
 const App = () => {
   return (
@@ -43,7 +44,7 @@ const App = () => {
       {/** Delivery Routes */ }
       <Route path="/delivery" element={<Delivery />} />
       <Route path="/delivery/login" element={<DriverLogin />} />
-
+      <Route path="/delivery/order-confirm" element={<OrderConfirm />} />
       {/* Restaurant Routes */}
 
       {/* Admin Routes */}
