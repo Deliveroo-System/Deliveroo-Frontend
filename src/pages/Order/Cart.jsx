@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../../components/common/headerlanding";
 import Footer from "../../components/common/footerLanding";
-import 'animate.css';
-
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -51,7 +49,6 @@ function Cart() {
 
         if (approvedItems.length > 0) {
           const {
-            categoryName,
             restaurantName,
             restaurantDescription,
             address,
@@ -59,11 +56,8 @@ function Cart() {
             email,
             openingTime,
             closingTime,
-            menuName,
-            menuDescription,
           } = approvedItems[0];
           setRestaurantDetails({
-            categoryName,
             restaurantName,
             restaurantDescription,
             address,
@@ -71,8 +65,6 @@ function Cart() {
             email,
             openingTime,
             closingTime,
-            menuName,
-            menuDescription,
           });
         }
       } catch (error) {
@@ -89,7 +81,7 @@ function Cart() {
     const categories = {};
 
     menuItems.forEach((item) => {
-      let category = "Others"; // Default category
+      let category = "Others";
       if (item.menuItemName.toLowerCase().includes("drink") || item.menuItemName.toLowerCase().includes("coffee")) {
         category = "Drinks";
       } else if (item.menuItemName.toLowerCase().includes("burger")) {
@@ -118,169 +110,110 @@ function Cart() {
   };
 
   const categorizedMenuItems = generateDynamicCategories(menuItems);
-
-  // Combine all categories into a single list for tabs
-  const allCategories = ["All" , ...Object.keys(categorizedMenuItems)];
+  const allCategories = ["All", ...Object.keys(categorizedMenuItems)];
 
   const filteredItems =
     activeCategory === "All"
       ? menuItems
-      : activeCategory === "Fine Dining"
-      ? menuItems.filter((item) => item.categoryName  )
       : categorizedMenuItems[activeCategory] || [];
 
   return (
-    <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 min-h-screen">
-    <NavBar />
-    
-   
-   {/* Menu Section */}
-{restaurantDetails && (
-  <div className="p-5 mb-6 animate__animated animate__fadeIn animate__delay-1s"> {/* Reduced padding and margin */}
-    <h2 className="text-6xl font-extrabold text-yellow-600 mb-3 font-serif" // Reduced margin
-      style={{
-        position: "absolute",
-        top: "px",
-        whiteSpace: "nowrap",
-        animation: "moveText 10s linear infinite"
-      }}
-    >
-      {restaurantDetails.restaurantName}
-    </h2>
-
-    <style>
-      {`
-        @keyframes moveText {
-          0% { left: 100%; }
-          100% { left: -100%; }
-        }
-      `}
-    </style>
-
-
-    <div className="text-base text-yellow" style={{ position: "relative", top: "10px" , left:"3%" }}> 
-    <p className="text-yellow-800 text-lg italic justify-center  py-16 animate__animated animate__fadeIn animate__delay-1s font-serif" style={{ fontSize: "38px", position: "relative" , top: "100px" , marginLeft: "24%"  }}>  
-      {restaurantDetails.restaurantDescription}
-    </p> 
-      <div className="flex flex-col">
-        <p className="animate__animated animate__fadeIn animate__delay-2s">
-          <span className="font-semibold text-yellow-700">Address:</span> {restaurantDetails.address}
-        </p>
-        <p className="animate__animated animate__fadeIn animate__delay-2s">
-          <span className="font-semibold text-yellow-700">Phone:</span> {restaurantDetails.phoneNumber}
-        </p>
-        <p className="animate__animated animate__fadeIn animate__delay-2s">
-          <span className="font-semibold text-yellow-700">Email:</span> {restaurantDetails.email || "N/A"}
-        </p>
-      </div>
-
-      <div className="flex flex-col">
-        <p className="animate__animated animate__fadeIn animate__delay-2s">
-          <span className="font-semibold text-yellow-700">Opening Hours:</span> {restaurantDetails.openingTime} - {restaurantDetails.closingTime}
-        </p>
-      </div>
-
-      <div className="flex justify-center mt-1 py-1 gap-x-16" style={{ position: "relative", bottom: "110px" ,  transform: "translateX(-20px)" }}>  
-        <img
-          src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1470&q=80"
-          alt="Food 3"
-          className="w-60 h-60 object-cover rounded-xl shadow-lg animate__animated animate__zoomIn animate__delay-2s"
-          style={{ marginLeft: "70%" }}  
-        />
-      </div>
-    </div>
-  </div>
-)}
-
- 
-<div className="max-w-8xl mx-auto px-14"
-style={{
-  position: "relative",
-  bottom: "100px" ,
-}}>
-
-  
-  {/* Flex container for Menu Section and Cart Section */}
-  <div className="flex justify-between space-x-8"> {/* Added space-x-8 for horizontal spacing */}
-    {/* Flex container for Categories and Menu Items */}
-    <div className="flex flex-row space-x-8">
+    <div className="min-h-screen bg-gray-50">
+      <NavBar />
       
-      {/* Category Section */}
-      <div className="w-1/4   bg-white rounded-3xl shadow-lg border border-yellow-200 p-4" style={{ position: "relative", left: "7%" , height: "700px"  }}>
-        <h3 className="text-2xl font-semibold text-yellow-600 mb-4">Categories</h3>
-        <div className="flex flex-col space-y-4">
-          {allCategories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-4 py-2 text-sm rounded-full transition duration-300 ${
-                activeCategory === category
-                  ? "bg-yellow-600 text-white shadow-md"
-                  : "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Menu Section */}
-      <div className="w-5/9" style={{ position: "relative", left: "9%" }}> 
-          
-        <div className="bg-white rounded-3xl shadow-lg border border-yellow-200">
-          <div className="p-10 border-b border-yellow-200 bg-yellow-50 rounded-t-3xl">
-             {/* Progress Steps */}
-             <div className="flex justify-between mb-8">
-                  <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center text-white font-bold">1</div>
-                    <span className="mt-2 text-xs font-medium text-yellow-600">Cart</span>
+      {/* Restaurant Header */}
+      {restaurantDetails && (
+        <div className="bg-white shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-gray-900">{restaurantDetails.restaurantName}</h1>
+                <p className="mt-2 text-gray-600">{restaurantDetails.restaurantDescription}</p>
+                
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center text-gray-600">
+                    <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {restaurantDetails.address}
                   </div>
-                  <div className="w-full border-t-2 border-yellow-200 my-auto mx-2"></div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-yellow-500 font-bold">2</div>
-                    <span className="mt-2 text-xs font-medium text-yellow-500">Details</span>
+                  <div className="flex items-center text-gray-600">
+                    <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    {restaurantDetails.phoneNumber}
                   </div>
-                  <div className="w-full border-t-2 border-yellow-200 my-auto mx-2"></div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-yellow-500 font-bold">3</div>
-                    <span className="mt-2 text-xs font-medium text-yellow-500">Confirmation</span>
-                  </div></div>
-            <h2 className="text-4xl font-semibold text-yellow-600">Menu Items</h2>
-            <p className="text-yellow-500 mt-3 text-lg">Select your favorite dishes and add them to your cart</p>
+                  <div className="flex items-center text-gray-600">
+                    <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {restaurantDetails.openingTime} - {restaurantDetails.closingTime}
+                  </div>
+                </div>
+              </div>
+              <div className="w-full md:w-64 h-48 bg-gray-200 rounded-lg overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1470&q=80"
+                  alt="Restaurant"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
           </div>
+        </div>
+      )}
 
-          {/* Menu Items */}
-          <div className="p-10 space-y-12" >
-            {activeCategory === "All"
-              ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {menuItems.map((item) => (
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Menu Section */}
+          <div className="lg:w-2/3">
+            {/* Category Tabs */}
+            <div className="mb-6 overflow-x-auto">
+              <div className="flex space-x-2 pb-2">
+                {allCategories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap ${
+                      activeCategory === category
+                        ? "bg-gray-900 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Menu Items */}
+            <div className="space-y-6">
+              {filteredItems.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredItems.map((item) => (
                     <div
                       key={item.menuItemId}
-                      className="border border-gray-100 rounded-2xl bg-white overflow-hidden hover:shadow-xl transition duration-300"
+                      className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-200"
                     >
-                      <div className="h-64 overflow-hidden bg-gray-100">
+                      <div className="h-48 bg-gray-100 overflow-hidden">
                         <img
                           src={item.menuItemImage}
                           alt={item.menuItemName}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <div className="p-6 flex flex-col justify-between">
-                        <div>
-                          <h3 className="font-semibold text-2xl text-gray-800">
-                            {item.menuItemName}
-                          </h3>
-                          <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
-                        </div>
-                        <div className="mt-6 flex justify-between items-center">
-                          <span className="text-yellow-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-gray-900">{item.menuItemName}</h3>
+                        <p className="mt-1 text-sm text-gray-600">{item.menuItemDescription}</p>
+                        <div className="mt-4 flex justify-between items-center">
+                          <span className="text-lg font-semibold text-gray-900">${item.menuItemPrice.toFixed(2)}</span>
                           <button
                             onClick={() =>
                               setCartItems([...cartItems, { ...item, instructions: "" }])
                             }
-                            className="bg-yellow-500 text-white font-bold px-5 py-2 rounded-full hover:bg-yellow-600 transition text-lg md:text-xl transition duration-300 transform hover:scale-105 "
+                            className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                           >
                             Add to Cart
                           </button>
@@ -289,202 +222,137 @@ style={{
                     </div>
                   ))}
                 </div>
-              )
-              : filteredItems.map((item) => (
-                  <div
-                    key={item.menuItemId}
-                    className={`border border-gray-100 rounded-2xl bg-white overflow-hidden hover:shadow-xl transition duration-300 ${
-                      activeCategory !== "All" ? "w-full h-auto" : ""
-                    }`} // Further increase size for selected categories
-                  >
-                    <div
-                      className={`${
-                        activeCategory !== "All" ? "h-[28rem]" : "h-64"
-                      } overflow-hidden bg-gray-100`} // Further adjust height for selected categories
-                    >
-                      <img
-                        src={item.menuItemImage}
-                        alt={item.menuItemName}
-                        className={`w-full h-full object-cover ${
-                          activeCategory !== "All" ? "hover:scale-115" : "hover:scale-105"
-                        } transition-transform duration-300`} // Further adjust hover scale
-                      />
-                    </div>
-                    <div className="p-6 flex flex-col justify-between">
-                      <div>
-                        <h3 className="font-semibold text-2xl text-gray-800">
-                          {item.menuItemName}
-                        </h3>
-                        <p className="text-gray-500 mt-3 text-sm">{item.menuItemDescription}</p>
-                      </div>
-                      <div className="mt-6 flex justify-between items-center">
-                        <span className="text-yellow-600 text-xl font-semibold">${item.menuItemPrice.toFixed(2)}</span>
-                        <button
-                          onClick={() =>
-                            setCartItems([...cartItems, { ...item, instructions: "" }])
-                          }
-                          className="bg-yellow-500 text-white font-bold px-5 py-2 rounded-full hover:bg-yellow-600 transition text-lg md:text-xl transition duration-300 transform hover:scale-105 "
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* Cart Section */}
-    <div className="lg:w-1/3" style={{ position: "relative", left: "7%" }}> {/* Adjusted left position */}
-      <div className="lg:w-2/3 p-6 bg-gradient-to-r from-yellow-300 to-yellow-400 text-white rounded-lg sticky top-4">
-        <h2 className="text-2xl font-bold mb-2">Your Order</h2>
-        <p className="mb-4">
-          {cartItems.length === 0
-            ? "Your cart is empty"
-            : `${cartItems.length} item(s) in cart`}
-        </p>
-
-        {cartItems.length === 0 ? (
-          <div className="text-center py-12 text-green-100">
-            <p>Add some delicious items from our menu</p>
-          </div>
-        ) : (
-          <>
-            <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2">
-              {cartItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center p-3 rounded-lg bg-green-200 bg-opacity-30 border border-green-100"
-                >
-                  <div className="flex items-center">
-                    <img
-                      src={item.menuItemImage}
-                      alt={item.menuItemName}
-                      className="w-14 h-14 object-cover rounded-lg mr-3"
-                    />
-                    <div>
-                      <h4 className="font-medium">{item.menuItemName}</h4>
-                      <span className="text-sm font-semibold">${item.menuItemPrice.toFixed(2)}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => removeFromCart(index)}
-                    className="text-red-100 text-sm hover:text-white"
-                  >
-                    Remove
-                  </button>
+              ) : (
+                <div className="text-center py-12 bg-white rounded-lg shadow">
+                  <p className="text-gray-500">No menu items found in this category</p>
                 </div>
-              ))}
-            </div>
-
-            <div className="border-t border-green-100 pt-4">
-              <div className="flex justify-between font-medium text-base mb-2">
-                <span>Subtotal:</span>
-                <span>${calculateTotal().toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm mb-4">
-                <span>Delivery fee:</span>
-                <span>$2.99</span>
-              </div>
-              <div className="flex justify-between font-bold text-xl mb-6">
-                <span>Total:</span>
-                <span>${(calculateTotal() + 2.99).toFixed(2)}</span>
-              </div>
-
-              <button
-                onClick={proceedToCheckout}
-                className="w-full bg-white text-yellow-700 hover:bg-yellow-100 py-3 rounded-full text-base font-medium transition"
-              >
-                Proceed to Checkout
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-</div>
- 
-
-<div>
-       {/* Trust Badges */}
-       <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
-            <div className="p-2 bg-orange-100 rounded-full">
-              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-orange-900 text-sm">Secure Payment</h4>
-              <p className="text-xs text-orange-700">SSL Encrypted</p>
+              )}
             </div>
           </div>
-          
-          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
-            <div className="p-2 bg-orange-100 rounded-full">
-              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-orange-900 text-sm">Fast Delivery</h4>
-              <p className="text-xs text-orange-700">30-45 minutes</p>
-            </div>
-          </div>
-          
-          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
-            <div className="p-2 bg-orange-100 rounded-full">
-              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-orange-900 text-sm">Quality Guarantee</h4>
-              <p className="text-xs text-orange-700">Fresh ingredients</p>
-            </div>
-          </div>
-          
-          <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-3 border border-yellow-100">
-            <div className="p-2 bg-orange-100 rounded-full">
-              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-orange-900 text-sm">24/7 Support</h4>
-              <p className="text-xs text-orange-700">Always here to help</p>
+
+          {/* Cart Section */}
+          <div className="lg:w-1/3">
+            <div className="bg-white rounded-lg shadow sticky top-8">
+              <div className="p-6 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Your Order</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  {cartItems.length === 0 ? "Your cart is empty" : `${cartItems.length} item(s)`}
+                </p>
+              </div>
+
+              {cartItems.length > 0 ? (
+                <>
+                  <div className="p-6 max-h-96 overflow-y-auto">
+                    <ul className="divide-y divide-gray-200">
+                      {cartItems.map((item, index) => (
+                        <li key={index} className="py-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <img
+                                src={item.menuItemImage}
+                                alt={item.menuItemName}
+                                className="w-12 h-12 rounded-md object-cover"
+                              />
+                              <div className="ml-4">
+                                <h3 className="text-sm font-medium text-gray-900">{item.menuItemName}</h3>
+                                <p className="text-sm text-gray-500">${item.menuItemPrice.toFixed(2)}</p>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => removeFromCart(index)}
+                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="p-6 border-t border-gray-200">
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Subtotal</span>
+                        <span className="text-sm font-medium text-gray-900">${calculateTotal().toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Delivery fee</span>
+                        <span className="text-sm font-medium text-gray-900">$2.99</span>
+                      </div>
+                      <div className="flex justify-between pt-3 border-t border-gray-200">
+                        <span className="text-base font-medium text-gray-900">Total</span>
+                        <span className="text-base font-medium text-gray-900">${(calculateTotal() + 2.99).toFixed(2)}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={proceedToCheckout}
+                      className="mt-6 w-full bg-gray-900 text-white py-3 px-4 rounded-md text-sm font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    >
+                      Proceed to Checkout
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="p-6 text-center">
+                  <p className="text-gray-500">Add items to your cart</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.5);
-        }
-      `}</style>
 
-      <br></br>
+      {/* Trust Badges */}
+      <div className="bg-gray-50 border-t border-gray-200 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
+                <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-sm font-medium text-gray-900">Secure Payment</h3>
+              <p className="mt-1 text-sm text-gray-500">SSL Encrypted</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
+                <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-sm font-medium text-gray-900">Fast Delivery</h3>
+              <p className="mt-1 text-sm text-gray-500">30-45 minutes</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
+                <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-sm font-medium text-gray-900">Quality Guarantee</h3>
+              <p className="mt-1 text-sm text-gray-500">Fresh ingredients</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
+                <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-sm font-medium text-gray-900">24/7 Support</h3>
+              <p className="mt-1 text-sm text-gray-500">Always here to help</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Footer />
     </div>
-     
   );
 }
 

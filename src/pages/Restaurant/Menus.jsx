@@ -11,7 +11,7 @@ export default function Menus() {
   const [selectedMenuId, setSelectedMenuId] = useState(null);
 
   const token = localStorage.getItem("token");
-  const restaurantId = localStorage.getItem("restaurantId");
+  const restaurantId = '17'
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -20,10 +20,12 @@ export default function Menus() {
 
   const fetchMenus = async () => {
     try {
+      console.log(restaurantId)
       const response = await axios.get(
         `http://localhost:8080/api/Restaurant/get-restaurant-menu/${restaurantId}`,
         { headers }
       );
+      console.log(restaurantId)
       const approvedMenus = response.data.filter((menu) => menu.menuApproved);
       setMenus(approvedMenus);
     } catch (error) {
@@ -656,8 +658,8 @@ export default function Menus() {
         return {
           menuName: document.getElementById("menu-name").value,
           description: document.getElementById("menu-desc").value,
-          isActive: document.getElementById("menu-active").checked,
-          isActive: menu.isActive // Preserve existing approval status
+          isActive: document.getElementById("menu-active").checked, // Use the checkbox value
+          isApproved: menu.isApproved // Preserve the approval status separately
         };
       },
       didOpen: () => {
