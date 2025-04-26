@@ -7,7 +7,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import LandinPage from "./pages/DeliverooLanding"
 import RestaurantAdd from "./features/auth/RestaurantAdd"
 import RestaurantManagerRegister from "./features/auth/RegistrationFlow";
-import PaymentPage from './pages/payment/PaymentPage';
+import CheckoutPage from './pages/payment/CheckoutPage';
 const App = () => {
   return (
     <Routes>
@@ -18,7 +18,7 @@ const App = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/restaurant/add" element={<RestaurantAdd />} />
       <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
-      <Route path="/payment" element={<PaymentPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
       {/* Admin Routes inside AdminLayout */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} /> {/* 👈 Default child route */}
