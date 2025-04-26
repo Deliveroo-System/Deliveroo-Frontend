@@ -42,7 +42,7 @@ const App = () => {
       {/* Admin Routes inside AdminLayout */} 
       <Route path="/restaurant/restaurant-manager/register" element={<RestaurantManagerRegister />} />
 
-      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="payment/user/checkout" element={<CheckoutPage />} />
 
 
       {/* Restaurant Manager Routes */}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { login } from "../../services/authService";
 import logo from "../../assets/img/logo1.png";
-
+import bgImage from "../../assets/img/12.png"
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +13,7 @@ const LoginPage = () => {
 
   // Random food image from Unsplash (different each time)
   const unsplashImage =
-    "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-7a60-61f7-b9b2-990f73e9c215/raw?se=2025-04-26T08%3A23%3A06Z&sp=r&sv=2024-08-04&sr=b&scid=3554c264-6094-53e7-b87a-681c9cf0aac1&skoid=ae70be19-8043-4428-a990-27c58b478304&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-26T06%3A29%3A23Z&ske=2025-04-27T06%3A29%3A23Z&sks=b&skv=2024-08-04&sig=iTfn4Dat20zTEAu6lqHp15qsNtGF7xpvwGuwuhz9KPs%3D";
-
+    "../../assets/img/12.png"
   useEffect(() => {
     const savedEmail = localStorage.getItem("savedEmail");
     if (savedEmail) {
@@ -54,9 +53,9 @@ const LoginPage = () => {
       <div
         className="hidden md:flex md:w-1/2 relative items-center justify-center p-12 text-white"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${unsplashImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${bgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         <div className="max-w-2xl z-10 px-10 py-16">
