@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "@paypal/react-paypal-js": "^8.8.3",
     "@react-google-maps/api": "^2.20.6",
+    "@react-pdf/renderer": "^4.3.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@stripe/stripe-js": "^7.1.0",
     "@tailwindcss/postcss7-compat": "^2.2.17",

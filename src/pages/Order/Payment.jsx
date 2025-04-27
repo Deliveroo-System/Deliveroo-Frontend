@@ -3,7 +3,10 @@ import { useLocation } from "react-router-dom";
 
 const Payment = () => {
   const location = useLocation();
-  const { cartItems, subtotal } = location.state || { cartItems: [], subtotal: 0 };
+  const { cartItems, subtotal } = location.state || {
+    cartItems: [],
+    subtotal: 0,
+  };
 
   return (
     <div className="font-sans">
@@ -13,7 +16,9 @@ const Payment = () => {
           Deliveroo <span className="font-bold">FOOD</span>
         </div>
         <div className="flex space-x-4">
-          <button className="px-4 py-2 text-gray-700 hover:text-black-600">Login</button>
+          <button className="px-4 py-2 text-gray-700 hover:text-black-600">
+            Login
+          </button>
           <button className="px-6 py-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-black transition-all duration-200 shadow-lg hover:shadow-xl border border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700">
             Sign Up
           </button>
@@ -21,19 +26,32 @@ const Payment = () => {
       </nav>
 
       <div className="bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center text-gray-800">Payment Details</h1>
-        <p className="text-center text-gray-600 mt-2">Complete your payment to place the order.</p>
+        <h1 className="text-4xl font-bold text-center text-gray-800">
+          Payment Details
+        </h1>
+        <p className="text-center text-gray-600 mt-2">
+          Complete your payment to place the order.
+        </p>
       </div>
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="bg-white p-6 shadow rounded-lg">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Order Summary</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Order Summary
+          </h2>
           {cartItems.map((item) => (
-            <div key={item.id} className="flex justify-between items-center mb-4">
+            <div
+              key={item.id}
+              className="flex justify-between items-center mb-4"
+            >
               <div>
                 <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
-                <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                <p className="text-sm text-gray-500">
+                  Quantity: {item.quantity}
+                </p>
               </div>
-              <p className="text-lg font-bold text-gray-800">${(item.price * item.quantity).toFixed(2)}</p>
+              <p className="text-lg font-bold text-gray-800">
+                ${(item.price * item.quantity).toFixed(2)}
+              </p>
             </div>
           ))}
           <div className="flex justify-between items-center border-t pt-4 mt-4">
@@ -42,10 +60,14 @@ const Payment = () => {
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Payment Method</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Payment Method
+          </h2>
           <form>
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Card Number</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                Card Number
+              </label>
               <input
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -53,7 +75,9 @@ const Payment = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Expiry Date</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                Expiry Date
+              </label>
               <input
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -61,7 +85,9 @@ const Payment = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">CVV</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                CVV
+              </label>
               <input
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -89,9 +115,24 @@ const Payment = () => {
               © {new Date().getFullYear()} Deliveroo. All rights reserved.
             </div>
             <div className="flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition">Cookies</a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition"
+              >
+                Terms of Service
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition"
+              >
+                Cookies
+              </a>
             </div>
           </div>
         </div>
