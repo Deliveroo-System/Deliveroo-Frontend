@@ -68,8 +68,8 @@ function Checkout() {
       const res = await fetch(`http://localhost:5212/api/paypal/capture/${data.orderID}`, { method: "POST" });
       if (!res.ok) throw new Error("Payment capture failed");
 
-      const to = '+94705297740'; 
-      const result = await sendPaymentSMS(to);
+      const to = '+94703889971'; 
+    //  const result = await sendPaymentSMS(to);
 
       await handlePlaceOrder(data.orderID, "paypal");
     } catch (error) {
