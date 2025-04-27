@@ -6,7 +6,7 @@ import Footer from "../../components/common/footerLanding";
 import { getLoggedInUser } from "../../services/authUtils";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Swal from "sweetalert2";
-
+import { sendPaymentSMS } from '../../services/sendPaymentSMS'; 
 function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,6 +67,10 @@ function Checkout() {
       setIsProcessing(true);
       const res = await fetch(`http://localhost:5212/api/paypal/capture/${data.orderID}`, { method: "POST" });
       if (!res.ok) throw new Error("Payment capture failed");
+
+      const to = '+94705297740'; 
+      const result = await sendPaymentSMS(to);
+
       await handlePlaceOrder(data.orderID, "paypal");
     } catch (error) {
       Swal.fire("Error", error.message, "error");
