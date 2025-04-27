@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  FaClock, 
-  FaMapMarkerAlt, 
-  FaSearch, 
+import {
+  FaClock,
+  FaMapMarkerAlt,
+  FaSearch,
   FaFilter,
   FaStar,
   FaUtensils,
-  FaMotorcycle
+  FaMotorcycle,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "../../components/common/headerlanding";
@@ -32,20 +32,25 @@ const Restaurant = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:8080/api/Restaurant/get-all-restaurants", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/Restaurant/get-all-restaurants",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.status === 401) {
-          setError("Unauthorized: Invalid or expired token. Please log in again.");
+          setError(
+            "Unauthorized: Invalid or expired token. Please log in again."
+          );
           return;
         }
 
         const data = await response.json();
         setRestaurants(data);
-        setFilteredRestaurants(data.filter(r => r.isApproved));
+        setFilteredRestaurants(data.filter((r) => r.isApproved));
       } catch (err) {
         setError("Error fetching restaurants. Please try again later.");
         console.error("Error fetching restaurants:", err);
@@ -56,13 +61,19 @@ const Restaurant = () => {
   }, []);
 
   useEffect(() => {
-    let results = restaurants.filter(restaurant => 
-      restaurant.isApproved &&
-      (restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       restaurant.address.toLowerCase().includes(searchTerm.toLowerCase())))
-    
+    let results = restaurants.filter(
+      (restaurant) =>
+        restaurant.isApproved &&
+        (restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          restaurant.address.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     if (openingTimeFilter) {
-      results = results.filter(r => r.openingTime <= openingTimeFilter && r.closingTime >= openingTimeFilter);
+      results = results.filter(
+        (r) =>
+          r.openingTime <= openingTimeFilter &&
+          r.closingTime >= openingTimeFilter
+      );
     }
 
     // Sorting
@@ -94,8 +105,10 @@ const Restaurant = () => {
     <>
       <NavBar />
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8">Discover Restaurants</h2>
-        
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">
+          Discover Restaurants
+        </h2>
+
         {/* Search and Filter Bar */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="relative flex-1">
@@ -110,9 +123,9 @@ const Restaurant = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
+
           <div className="relative">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -121,17 +134,19 @@ const Restaurant = () => {
               <FaFilter className="text-orange-500" />
               <span className="font-medium">Filters</span>
             </motion.button>
-            
+
             <AnimatePresence>
               {isFilterOpen && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-xl shadow-lg p-4 z-10"
                 >
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Sort by</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sort by
+                    </label>
                     <select
                       className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
                       value={sortOption}
@@ -141,9 +156,11 @@ const Restaurant = () => {
                       <option value="openingTime">Opening Time</option>
                     </select>
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Currently Open</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Currently Open
+                    </label>
                     <input
                       type="time"
                       className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
@@ -166,11 +183,18 @@ const Restaurant = () => {
                   key={restaurant.restaurantId}
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100"
-                  onClick={() => navigate(`/cart`, { state: { restaurantId: restaurant.restaurantId } })}
+                  onClick={() =>
+                    navigate(`/cart`, {
+                      state: { restaurantId: restaurant.restaurantId },
+                    })
+                  }
                 >
                   <div className="relative h-48 w-full overflow-hidden">
                     <img
-                      src={restaurant.imageUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1470&q=80"}
+                      src={
+                        restaurant.imageUrl ||
+                        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1470&q=80"
+                      }
                       alt={restaurant.name}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
@@ -179,14 +203,18 @@ const Restaurant = () => {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-bold text-lg text-gray-800 mb-1 truncate">{restaurant.name}</h3>
+                    <h3 className="font-bold text-lg text-gray-800 mb-1 truncate">
+                      {restaurant.name}
+                    </h3>
                     <div className="flex items-center text-sm text-gray-600 mb-2">
                       <FaMapMarkerAlt className="mr-2 text-orange-500" />
                       <span className="truncate">{restaurant.address}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-600 mb-3">
                       <FaClock className="mr-2 text-orange-500" />
-                      <span>{restaurant.openingTime} - {restaurant.closingTime}</span>
+                      <span>
+                        {restaurant.openingTime} - {restaurant.closingTime}
+                      </span>
                     </div>
                     <div className="flex justify-between text-xs text-gray-500">
                       <span className="flex items-center">
@@ -201,14 +229,18 @@ const Restaurant = () => {
               ))}
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-center py-12"
             >
               <div className="text-gray-400 text-5xl mb-4">🍽️</div>
-              <h3 className="text-xl font-medium text-gray-600 mb-2">No restaurants found</h3>
-              <p className="text-gray-500">Try adjusting your search or filters</p>
+              <h3 className="text-xl font-medium text-gray-600 mb-2">
+                No restaurants found
+              </h3>
+              <p className="text-gray-500">
+                Try adjusting your search or filters
+              </p>
             </motion.div>
           )}
         </div>

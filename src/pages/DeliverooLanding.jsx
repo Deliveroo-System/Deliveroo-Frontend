@@ -12,12 +12,9 @@ const DeliverooLanding = () => {
   const navigate = useNavigate();
 
   return (
-    
     <div className="font-sans">
-      
-          <NavBar />
-        
-      
+      <NavBar />
+
       <div
         className="relative h-screen bg-cover bg-center"
         style={{
@@ -26,7 +23,6 @@ const DeliverooLanding = () => {
         }}
       >
         {/* NavBar inside hero image */}
-       
 
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -46,9 +42,9 @@ const DeliverooLanding = () => {
                   className="w-full py-4 pl-10 pr-4 rounded-lg text-gray-800 focus:outline-none"
                 />
               </div>
-              <button 
+              <button
                 className="px-6 py-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-black transition-all duration-200 shadow-lg hover:shadow-xl border border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700"
-                onClick={() => navigate('/search')}
+                onClick={() => navigate("/search")}
               >
                 Find Food
               </button>
