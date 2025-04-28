@@ -36,13 +36,13 @@ import DriverTracking from './pages/Delivery/DriverTracking';
 
 function App() {
   const PrivateRoute = ({ children }) => {
-    const isAuthenticated = localStorage.getItem('driverToken');
+    const isAuthenticated = localStorage.getItem('token');
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
 
   return (
     <div className="App">
-      <Header />
+     
       <main className="main-content">
         <Routes>
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './DriverDashboard.css';
 
 function DriverDashboard() {
   const [orders, setOrders] = useState([]);
@@ -17,18 +16,14 @@ function DriverDashboard() {
     }
   }, []);
 
-  // Process orders into categories whenever orders state changes
   useEffect(() => {
     if (orders.length > 0) {
-      // Filter out active orders (On the Way status)
       const active = orders.filter(order => order.status === "On the Way");
       setActiveOrders(active);
       
-      // Filter out pending assigned orders
       const pending = orders.filter(order => order.status === "Assigned");
       setPendingOrders(pending);
       
-      // Filter out completed orders (Delivered or Rejected)
       const completed = orders.filter(order => 
         order.status === "Delivered" || order.status === "Rejected"
       );
@@ -46,7 +41,6 @@ function DriverDashboard() {
 
   const fetchOrders = async (driverId) => {
     try {
-      // Fetch all driver orders including completed ones
       const response = await fetch(`http://localhost:3000/api/deliveries/driver/${driverId}/all`, {
         headers: getAuthHeaders()
       });
@@ -99,7 +93,6 @@ function DriverDashboard() {
         throw new Error(errorData.error || 'Failed to update status');
       }
 
-      // Refresh orders after status update
       const driverId = JSON.parse(localStorage.getItem('driverInfo'))?.id;
       fetchOrders(driverId);
     } catch (err) {
@@ -116,52 +109,50 @@ function DriverDashboard() {
 
   const getStatusColor = (status) => {
     const colors = {
-      'Pending': '#ffc107',
-      'Assigned': '#17a2b8',
-      'On the Way': '#28a745',
-      'Delivered': '#6c757d',
-      'Rejected': '#dc3545'
+      'Pending': 'bg-amber-400',
+      'Assigned': 'bg-cyan-500',
+      'On the Way': 'bg-green-500',
+      'Delivered': 'bg-gray-500',
+      'Rejected': 'bg-red-500'
     };
-    return colors[status] || '#6c757d';
+    return colors[status] || 'bg-gray-500';
   };
 
-  // Reusable order card component
   const OrderCard = ({ order, showActions = true }) => (
-    <div className="order-card">
-      <div className="order-header">
-        <h3>Order #{order._id.slice(-6)}</h3>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-800">Order #{order._id.slice(-6)}</h3>
         <span 
-          className="status-badge"
-          style={{ backgroundColor: getStatusColor(order.status) }}
+          className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(order.status)}`}
         >
           {order.status}
         </span>
       </div>
-      <div className="order-details">
-        <p><strong>Customer:</strong> {order.customerName}</p>
-        <p><strong>Address:</strong> {order.address}</p>
-        <p><strong>City:</strong> {order.city}</p>
-        <p><strong>Items:</strong> {order.items?.length || 0}</p>
+      <div className="p-4 space-y-2">
+        <p className="text-gray-700"><span className="font-medium">Customer:</span> {order.customerName}</p>
+        <p className="text-gray-700"><span className="font-medium">Address:</span> {order.address}</p>
+        <p className="text-gray-700"><span className="font-medium">City:</span> {order.city}</p>
+        <p className="text-gray-700"><span className="font-medium">Items:</span> {order.items?.length || 0}</p>
       </div>
       {showActions && order.status !== 'Delivered' && order.status !== 'Rejected' && (
-        <div className="order-actions">
+        <div className="p-4 bg-gray-50 flex flex-wrap gap-2">
           {order.status !== 'On the Way' && (
             <button 
               onClick={() => updateOrderStatus(order._id, 'On the Way')}
-              className="action-btn start-btn"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               Start Delivery
             </button>
           )}
           <button 
             onClick={() => updateOrderStatus(order._id, 'Delivered')}
-            className="action-btn complete-btn"
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium"
           >
             Mark Delivered
           </button>
           <button 
             onClick={() => updateOrderStatus(order._id, 'Rejected')}
-            className="action-btn reject-btn"
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
           >
             Reject Order
           </button>
@@ -171,30 +162,43 @@ function DriverDashboard() {
   );
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>Driver Dashboard</h1>
-          {driverInfo && (
-            <div className="driver-info">
-              <p>Welcome, {driverInfo.name}</p>
-              <p>Delivery Cities: {driverInfo.deliveryCities?.join(', ')}</p>
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Driver Dashboard</h1>
+            {driverInfo && (
+              <div className="mt-2 text-sm text-gray-600">
+                <p>Welcome, <span className="font-medium">{driverInfo.name}</span></p>
+                <p>Delivery Cities: <span className="font-medium">{driverInfo.deliveryCities?.join(', ')}</span></p>
+              </div>
+            )}
+          </div>
+          <button 
+            onClick={handleLogout} 
+            className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors text-sm font-medium"
+          >
+            Logout
+          </button>
         </div>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
       </header>
 
-      <main className="dashboard-content">
-        {error && <div className="error">{error}</div>}
+      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-8">
+        {error && (
+          <div className="p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <p>{error}</p>
+          </div>
+        )}
         
         {/* New Assignments Section */}
-        <section className="orders-section pending-orders">
-          <h2>New Assignments</h2>
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">New Assignments</h2>
           {pendingOrders.length === 0 ? (
-            <p className="no-orders">No new assignments.</p>
+            <div className="p-6 bg-white rounded-lg shadow text-center text-gray-500">
+              No new assignments.
+            </div>
           ) : (
-            <div className="orders-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pendingOrders.map(order => (
                 <OrderCard key={order._id} order={order} />
               ))}
@@ -203,12 +207,14 @@ function DriverDashboard() {
         </section>
         
         {/* Active Deliveries Section */}
-        <section className="orders-section active-orders">
-          <h2>In Progress</h2>
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">In Progress</h2>
           {activeOrders.length === 0 ? (
-            <p className="no-orders">No active deliveries.</p>
+            <div className="p-6 bg-white rounded-lg shadow text-center text-gray-500">
+              No active deliveries.
+            </div>
           ) : (
-            <div className="orders-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {activeOrders.map(order => (
                 <OrderCard key={order._id} order={order} />
               ))}
@@ -217,12 +223,14 @@ function DriverDashboard() {
         </section>
         
         {/* Completed Orders Section */}
-        <section className="orders-section completed-orders">
-          <h2>Past Orders</h2>
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">Past Orders</h2>
           {completedOrders.length === 0 ? (
-            <p className="no-orders">No completed orders.</p>
+            <div className="p-6 bg-white rounded-lg shadow text-center text-gray-500">
+              No completed orders.
+            </div>
           ) : (
-            <div className="orders-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {completedOrders.map(order => (
                 <OrderCard key={order._id} order={order} showActions={false} />
               ))}
