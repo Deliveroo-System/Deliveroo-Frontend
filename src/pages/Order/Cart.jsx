@@ -17,9 +17,36 @@ function Cart() {
     setCartItems(cartItems.filter((_, i) => i !== index));
   };
 
-  const proceedToCheckout = () => {
-    navigate("/order/checkout", { state: { cartItems } });
+ // In the Cart component, update the proceedToCheckout function:
+const proceedToCheckout = () => {
+  if (cartItems.length === 0) {
+    alert("Your cart is empty");
+    return;
+  }
+
+  // Get the primary item (first item in cart) to extract restaurant details
+  const primaryItem = cartItems[0];
+  
+  // Prepare the data to pass to checkout
+  const checkoutData = {
+    cartItems,
+    restaurantDetails: {
+      restaurantId: primaryItem.restaurantId,
+      categoryId: primaryItem.categoryId,
+      menuId: primaryItem.menuId,
+      menuItemId: primaryItem.menuItemId,
+      categoryName: primaryItem.categoryName,
+      restaurantName: primaryItem.restaurantName,
+      restaurantDescription: primaryItem.restaurantDescription,
+      menuName: primaryItem.menuName,
+      menuItemName: primaryItem.menuItemName,
+      // Include any other necessary details from restaurantDetails state
+      ...restaurantDetails
+    }
   };
+
+  navigate("/order/checkout", { state: checkoutData });
+};
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.menuItemPrice, 0);
@@ -275,16 +302,17 @@ function Cart() {
                             ${item.menuItemPrice.toFixed(2)}
                           </span>
                           <button
-                            onClick={() =>
-                              setCartItems([
-                                ...cartItems,
-                                { ...item, instructions: "" },
-                              ])
-                            }
-                            className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                          >
-                            Add to Cart
-                          </button>
+  onClick={() =>
+    setCartItems([
+      ...cartItems,
+      { ...item, instructions: "" },
+    ])
+  }
+  className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+>
+  Add to Cart
+</button>
+
                         </div>
                       </div>
                     </div>
@@ -387,101 +415,6 @@ function Cart() {
                   <p className="text-gray-500">Add items to your cart</p>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Trust Badges */}
-      <div className="bg-gray-50 border-t border-gray-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-sm font-medium text-gray-900">
-                Secure Payment
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">SSL Encrypted</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-sm font-medium text-gray-900">
-                Fast Delivery
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">30-45 minutes</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-sm font-medium text-gray-900">
-                Quality Guarantee
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">Fresh ingredients</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-sm font-medium text-gray-900">
-                24/7 Support
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">Always here to help</p>
             </div>
           </div>
         </div>

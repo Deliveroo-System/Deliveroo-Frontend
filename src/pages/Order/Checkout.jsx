@@ -8,13 +8,22 @@ import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Swal from "sweetalert2";
 import { sendPaymentSMS } from "../../services/sendPaymentSMS";
 function Checkout() {
+
   const location = useLocation();
   const navigate = useNavigate();
-  const cartItems = location.state?.cartItems || [];
+  
   const userDetails = location.state?.userDetails || {};
   const [paymentMethod, setPaymentMethod] = useState(""); // 'paypal' or 'cod'
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(3);
+  const [restaurants, setRestaurants] = useState([]);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+
+  const { 
+    cartItems = [], 
+    restaurantDetails = {} 
+  } = location.state || {};
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -30,7 +39,23 @@ function Checkout() {
     city: "",
     zipCode: "",
   });
-
+  const {
+    restaurantId,
+    categoryId,
+    menuId,
+    menuItemId,
+    categoryName,
+    restaurantName,
+    restaurantDescription,
+    menuName,
+    menuItemName,
+    // Other restaurant details
+    address,
+    phoneNumber,
+    email,
+    openingTime,
+    closingTime
+  } = restaurantDetails;
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + (item.menuItemPrice || 0),
     0
@@ -40,7 +65,6 @@ function Checkout() {
   const finalTotal = totalPrice + deliveryFee + tax;
   const user = getLoggedInUser();
 
-  // Group cart items by name and calculate quantities
   const groupedCartItems = cartItems.reduce((acc, item) => {
     const existingItem = acc.find((i) => i.menuItemName === item.menuItemName);
     if (existingItem) {
@@ -51,79 +75,169 @@ function Checkout() {
     return acc;
   }, []);
 
+  const saveUserDetails = async (orderId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication token missing");
+      }
+  
+      // Validate required customer details
+      const requiredFields = ['name', 'phone', 'address'];
+      const missingFields = requiredFields.filter(field => !customerDetails?.[field]);
+      
+      if (missingFields.length > 0) {
+        throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+      }
+  
+      // Validate cart items
+      if (!groupedCartItems?.length) {
+        throw new Error("No items in cart");
+      }
+  
+      // Get primary item with all required fields
+      const primaryItem = groupedCartItems[0];
+      if (!primaryItem) {
+        throw new Error("No items in cart");
+      }
+  
+      // Prepare items payload according to your sample
+      const itemsPayload = groupedCartItems.map(item => ({
+        name: item.menuItemName || 'Unknown Item',
+        qty: item.quantity || 1,
+        price: item.menuItemPrice || 0
+      }));
+  
+      // Main payload structure matching your sample input
+      const userDetailsPayload = {
+        orderId,
+        deliveryId: primaryItem.restaurantId || restaurantId || "17", // Fallback to restaurantId from props or default
+        customerName: customerDetails.name.trim(),
+        phoneNumber: customerDetails.phone.trim(),
+        address: customerDetails.address.trim(),
+        city: customerDetails.city?.trim() || "Somewhere",
+        zipCode: customerDetails.zipCode?.trim() || "12345",
+        paymentMethod: paymentMethod === "paypal" ? "Card" : "Cash on Delivery",
+        cardDetails: paymentMethod === "paypal" ? {
+          cardNumber: "4111111111111111",
+          expiryDate: "12/23",
+          cvv: "123"
+        } : null,
+        items: itemsPayload,
+        totalAmount: finalTotal,
+        restaurantId: primaryItem.restaurantId || restaurantId || "17",
+        categoryId: primaryItem.categoryId || categoryId || "3",
+        menuId: primaryItem.menuId || menuId || "7",
+        menuItemId: primaryItem.menuItemId || menuItemId || "10",
+        categoryName: primaryItem.categoryName || categoryName || "Fine Dining",
+        restaurantName: primaryItem.restaurantName || restaurantName || "The Hub",
+        restaurantDescription: primaryItem.restaurantDescription || restaurantDescription || "An updated description for The Spice Hub.",
+        menuName: primaryItem.menuName || menuName || "Breakfast Menu",
+        menuItemName: primaryItem.menuItemName || menuItemName || "Grilled Bacon"
+      };
+  
+      // Clean payload (remove undefined/null values)
+      const cleanPayload = JSON.parse(JSON.stringify(userDetailsPayload));
+  
+      const response = await fetch("http://localhost:5000/api/userdetails/userdetails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(cleanPayload),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      console.log("User details saved successfully", responseData);
+      
+
+  
+      return responseData;
+    } catch (error) {
+      console.error("User Details Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Order Failed',
+        text: error.message || "Failed to save user details",
+        footer: 'Please try again or contact support'
+      });
+      throw error;
+    }
+  };
+
   const handlePlaceOrder = async (paymentId = null, method = "cod") => {
     setIsProcessing(true);
+
     try {
-      // Prepare order data
+      if (!customerDetails?.name || !user?.email || !groupedCartItems?.length) {
+        throw new Error("Missing required order information.");
+      }
+
+      // Prepare only the required order data
       const orderData = {
         customerName: customerDetails.name,
-        customerEmail: user?.email,
-        customerPhone: customerDetails.phone,
-        deliveryAddress: `${customerDetails.address}, ${customerDetails.city}, ${customerDetails.zipCode}`,
-        paymentMethod: method,
-        paymentId: paymentId,
+        customerEmail: user.email,
         foodItems: groupedCartItems.map((item) => ({
           name: item.menuItemName,
           quantity: item.quantity,
           price: item.menuItemPrice,
         })),
-        subtotal: totalPrice,
-        deliveryFee: deliveryFee,
-        tax: tax,
         totalPrice: finalTotal,
       };
 
-      // Save order to backend
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authentication token missing. Please login again.");
+      }
+
       const response = await fetch("http://localhost:5000/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(orderData),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save order");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to place order.");
       }
 
       const orderResult = await response.json();
+      console.log(orderResult.order._id);
 
-      // Save order ID to localStorage
+      // Save order _id to localStorage
       localStorage.setItem(
         "currentOrder",
         JSON.stringify({
-          orderId: orderResult.orderId,
+          orderId: orderResult.order._id, // ✅ Correct: using order._id
           ...orderData,
         })
       );
-
-      // Send SMS notification
-      const to = "+94703889971";
-      //await sendPaymentSMS(to);
-
-      // Navigate to success page with order details
+      await saveUserDetails(orderResult.order._id);
       navigate("/order/success", {
         state: {
           order: {
-            customerName: customerDetails.name,
-            customerEmail: user?.email,
-            foodItems: groupedCartItems.map((item) => ({
-              name: item.menuItemName,
-              quantity: item.quantity,
-              price: item.menuItemPrice,
-            })),
-            totalPrice: finalTotal,
-            orderId: orderResult.orderId,
+            ...orderData,
+            orderId: orderResult.order._id, // ✅ Correct here too
           },
         },
       });
     } catch (error) {
+      console.error("Order Error:", error);
       Swal.fire("Error", error.message || "Failed to place order", "error");
     } finally {
       setIsProcessing(false);
     }
   };
+
   const handlePayPalSuccess = async (data) => {
     try {
       setIsProcessing(true);

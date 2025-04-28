@@ -21,6 +21,7 @@ import Payments from "./pages/Restaurant/Payments";
 import Help from "./pages/Restaurant/Help";
 import OrderSuccess from "./pages/Order/OrderSuccess";
 import AdminRestaurantManagement from "./pages/admin/AdminRestaurantManagement";
+import AdminUserManagement from "./pages/admin/OrderDashboard";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
         <Route path="payments" element={<Payments />} />
         <Route path="help" element={<Help />} />
       </Route>
+
       {/* Order Routes */}
       <Route path="/cart" element={<Cart />} />
       <Route path="/order/checkout" element={<Checkout />} />{" "}
@@ -62,6 +64,7 @@ const App = () => {
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="restaurants" element={<AdminRestaurantManagement />} />
+        <Route path="users" element={<AdminUserManagement />} />
       </Route>
     </Routes>
   );
