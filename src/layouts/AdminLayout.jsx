@@ -1,153 +1,127 @@
-import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import { 
-  HomeIcon, 
-  Cog6ToothIcon, 
-  BuildingStorefrontIcon,
-  Squares2X2Icon,
-  RectangleGroupIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowLeftOnRectangleIcon,
-  UsersIcon,
-  ChartBarIcon
-} from "@heroicons/react/24/outline";
+import React, { useEffect, useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+import {
+  FaBars,
+  FaHome,
+  FaStore,
+  FaThLarge,
+  FaBoxes,
+  FaUsers,
+  FaChartBar,
+  FaCog,
+  FaSignOutAlt
+} from "react-icons/fa";
+
+const MySwal = withReactContent(Swal);
 
 const AdminLayout = () => {
+  const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+
+  const navItems = [
+  
+    { name: "Restaurants", icon: <FaStore />, path: "/admin/restaurants" },
+   
+    { name: "Users", icon: <FaUsers />, path: "/admin/users" },
+    { name: "Reports", icon: <FaChartBar />, path: "/admin/reports" }
+  ];
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const handleLogout = () => {
+    MySwal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out of the system',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        navigate("/login");
+      }
+    });
+  };
+
+  // 🔐 Token and Role Check
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token || role !== "Admin") {
+      MySwal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "You must be an Admin to access this page!",
+        confirmButtonText: "Go to Login"
+      }).then(() => {
+        navigate("/login");
+      });
+    }
+  }, [navigate]);
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside 
-        className={`bg-gradient-to-b from-indigo-600 to-indigo-800 text-white shadow-lg h-screen flex flex-col fixed transition-all duration-300 ease-in-out z-10 ${
+      <div
+        className={`bg-white text-gray-800 transition-all duration-300 border-r border-gray-200 ${
           sidebarOpen ? "w-64" : "w-20"
-        }`}
+        } flex flex-col shadow-md fixed h-full z-10`}
       >
-        <div className="p-5 border-b border-cyan-600 flex items-center justify-between">
+        {/* Toggle Button and Logo */}
+        <div className="flex justify-between items-center p-4 border-b border-gray-100">
           {sidebarOpen ? (
-            <h2 className="text-xl font-bold flex items-center space-x-2">
-              <Cog6ToothIcon className="h-6 w-6" />
-              <span>Restaurant Admin</span>
-            </h2>
-          ) : (
-            <div className="flex justify-center w-full">
-              <Cog6ToothIcon className="h-6 w-6" />
+            <div className="flex items-center space-x-2">
+              <FaCog className="text-2xl text-indigo-600" />
+              <span className="text-xl font-bold">Admin Panel</span>
             </div>
-          )}
-        </div>
-
-        {/* Toggle Button */}
-        <button
-          onClick={toggleSidebar}
-          className="absolute -right-3 top-5 bg-indigo-700 hover:bg-indigo-600 text-white p-1 rounded-full border-2 border-cyan-600 shadow-md"
-        >
-          {sidebarOpen ? (
-            <ChevronLeftIcon className="h-4 w-4" />
           ) : (
-            <ChevronRightIcon className="h-4 w-4" />
+            <FaCog className="text-2xl text-indigo-600 mx-auto" />
           )}
-        </button>
-
-        <nav className="p-4 space-y-1 flex-grow">
-          <NavLink
-            to="/admin"
-            end
-            className={({ isActive }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-cyan-600 text-white shadow-md"
-                  : "text-cyan-100 hover:bg-cyan-700 hover:text-white"
-              }`
-            }
-          >
-            <HomeIcon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Dashboard</span>}
-          </NavLink>
-
-          <NavLink
-            to="/admin/restaurants"
-            className={({ isActive }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-cyan-600 text-white shadow-md"
-                  : "text-cyan-100 hover:bg-cyan-700 hover:text-white"
-              }`
-            }
-          >
-            <BuildingStorefrontIcon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Restaurants</span>}
-          </NavLink>
-
-          <NavLink
-            to="/admin/menus"
-            className={({ isActive }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-cyan-600 text-white shadow-md"
-                  : "text-cyan-100 hover:bg-cyan-700 hover:text-white"
-              }`
-            }
-          >
-            <Squares2X2Icon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Menus</span>}
-          </NavLink>
-
-          <NavLink
-            to="/admin/menu-items"
-            className={({ isActive }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-cyan-600 text-white shadow-md"
-                  : "text-cyan-100 hover:bg-cyan-700 hover:text-white"
-              }`
-            }
-          >
-            <RectangleGroupIcon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Menu Items</span>}
-          </NavLink>
-
-          <NavLink
-            to="/admin/users"
-            className={({ isActive }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-cyan-600 text-white shadow-md"
-                  : "text-cyan-100 hover:bg-cyan-700 hover:text-white"
-              }`
-            }
-          >
-            <UsersIcon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Users</span>}
-          </NavLink>
-
-          <NavLink
-            to="/admin/reports"
-            className={({ isActive }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-all ${
-                isActive
-                  ? "bg-cyan-600 text-white shadow-md"
-                  : "text-cyan-100 hover:bg-cyan-700 hover:text-white"
-              }`
-            }
-          >
-            <ChartBarIcon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Reports</span>}
-          </NavLink>
-        </nav>
-        
-        {/* Logout Button */}
-        <div className="p-4">
-          <button className="flex items-center space-x-3 w-full p-3 rounded-lg text-cyan-100 hover:bg-cyan-700 hover:text-white transition-all">
-            <ArrowLeftOnRectangleIcon className="h-5 w-5 flex-shrink-0" />
-            {sidebarOpen && <span>Logout</span>}
-          </button>
+          <FaBars
+            className="cursor-pointer text-xl hover:text-indigo-600"
+            onClick={toggleSidebar}
+          />
         </div>
-      </aside>
+
+        {/* Nav Items */}
+        <div className="flex-1 px-2 pt-4 space-y-2">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.name}
+              to={item.path}
+              end
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-lg px-4 py-3 text-lg font-medium transition-all duration-200 ${
+                  isActive
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "hover:bg-gray-100 text-gray-700"
+                }`
+              }
+            >
+              <span className="text-2xl">{item.icon}</span>
+              {sidebarOpen && <span>{item.name}</span>}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Logout Button */}
+        <div
+          onClick={handleLogout}
+          className="flex items-center gap-4 px-4 py-4 mt-auto cursor-pointer text-red-600 hover:bg-red-50 transition rounded-lg mb-4 mx-2"
+        >
+          <FaSignOutAlt className="text-2xl" />
+          {sidebarOpen && <span className="text-lg font-medium">Log Out</span>}
+        </div>
+      </div>
 
       {/* Main Content */}
       <main 

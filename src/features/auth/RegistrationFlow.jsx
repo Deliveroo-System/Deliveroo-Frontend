@@ -5,6 +5,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const RegistrationFlow = () => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);

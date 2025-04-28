@@ -11,7 +11,7 @@ export default function Menus() {
   const [selectedMenuId, setSelectedMenuId] = useState(null);
 
   const token = localStorage.getItem("token");
-  const restaurantId = localStorage.getItem("restaurantId");
+  const restaurantId = "17";
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -20,11 +20,13 @@ export default function Menus() {
 
   const fetchMenus = async () => {
     try {
+      console.log(restaurantId);
       const response = await axios.get(
         `http://localhost:8080/api/Restaurant/get-restaurant-menu/${restaurantId}`,
         { headers }
       );
-      const approvedMenus = response.data.filter((menu) => menu.isApproved);
+      console.log(restaurantId);
+      const approvedMenus = response.data.filter((menu) => menu.menuApproved);
       setMenus(approvedMenus);
     } catch (error) {
       console.error("Error fetching menus:", error);
@@ -130,39 +132,39 @@ export default function Menus() {
       showCancelButton: true,
       cancelButtonText: "Cancel",
       customClass: {
-        popup: 'custom-swal-popup',
+        popup: "custom-swal-popup",
       },
       didOpen: () => {
         const pickerButton = document.getElementById("image-picker");
         const imageInput = document.getElementById("item-image");
-  
+
         pickerButton.addEventListener("click", () => {
           const fileInput = document.createElement("input");
           fileInput.type = "file";
           fileInput.accept = "image/*";
-  
+
           fileInput.onchange = (event) => {
             const file = event.target.files[0];
             if (file) {
               imageInput.value = file.name;
             }
           };
-  
+
           fileInput.click();
         });
-  
+
         // Add toggle switch functionality
         const toggle = document.getElementById("item-available");
         const slider = toggle.nextElementSibling;
         const sliderCircle = slider.nextElementSibling;
-  
-        toggle.addEventListener('change', function() {
-          if(this.checked) {
-            slider.style.backgroundColor = '#FF5823';
-            sliderCircle.style.transform = 'translateX(24px)';
+
+        toggle.addEventListener("change", function () {
+          if (this.checked) {
+            slider.style.backgroundColor = "#FF5823";
+            sliderCircle.style.transform = "translateX(24px)";
           } else {
-            slider.style.backgroundColor = '#ccc';
-            sliderCircle.style.transform = 'translateX(0)';
+            slider.style.backgroundColor = "#ccc";
+            sliderCircle.style.transform = "translateX(0)";
           }
         });
       },
@@ -173,10 +175,11 @@ export default function Menus() {
           price: parseFloat(document.getElementById("item-price").value),
           imageUrl: document.getElementById("item-image").value,
           isAvailable: document.getElementById("item-available").checked,
+          isApproved: false, // Add this line
         };
       },
     });
-  
+
     if (formValues) {
       try {
         await axios.post(
@@ -188,7 +191,7 @@ export default function Menus() {
           title: "Success!",
           text: "Menu item added successfully",
           icon: "success",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
         handleMenuClick(selectedMenuId);
       } catch (err) {
@@ -196,7 +199,7 @@ export default function Menus() {
           title: "Error!",
           text: "Failed to add item. Please try again.",
           icon: "error",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
       }
     }
@@ -210,7 +213,7 @@ export default function Menus() {
           <input 
             id="item-name" 
             class="swal2-input" 
-            value="${item.name || ''}" 
+            value="${item.name || ""}" 
             placeholder="Item Name"
             style="padding: 12px; border-radius: 8px;"
           />
@@ -220,13 +223,13 @@ export default function Menus() {
             class="swal2-textarea" 
             placeholder="Description"
             style="padding: 12px; border-radius: 8px; min-height: 100px;"
-          >${item.description || ''}</textarea>
+          >${item.description || ""}</textarea>
           
           <input 
             id="item-price" 
             type="number" 
             class="swal2-input" 
-            value="${item.price || ''}"
+            value="${item.price || ""}"
             placeholder="Price (e.g. 9.99)"
             style="padding: 12px; border-radius: 8px;"
             step="0.01"
@@ -234,7 +237,9 @@ export default function Menus() {
           />
           
           <div style="display: flex; align-items: center; gap: 10px;">
-          <input id="item-image" class="swal2-input" value="${item.imageUrl}" placeholder="Image filename (e.g. veggie.jpg)" />
+          <input id="item-image" class="swal2-input" value="${
+            item.imageUrl
+          }" placeholder="Image filename (e.g. veggie.jpg)" />
           <button id="image-picker" style="padding: 8px 8px; background-color: #FF5823; border: none; color: white; border-radius: 5px; cursor: pointer;  width: 380px; margin-top:30px ">
             📁 Browse
           </button>
@@ -253,7 +258,7 @@ export default function Menus() {
                 type="checkbox" 
                 id="item-available" 
                 style="opacity: 0; width: 0; height: 0;"
-                ${item.isAvailable ? 'checked' : ''}
+                ${item.isAvailable ? "checked" : ""}
               />
               <span style="
                 position: absolute;
@@ -262,7 +267,7 @@ export default function Menus() {
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: ${item.isAvailable ? '#FF5823' : '#ccc'};
+                background-color: ${item.isAvailable ? "#FF5823" : "#ccc"};
                 transition: .4s;
                 border-radius: 34px;
               "></span>
@@ -270,7 +275,7 @@ export default function Menus() {
                 position: absolute;
                 height: 18px;
                 width: 18px;
-                left: ${item.isAvailable ? '26px' : '4px'};
+                left: ${item.isAvailable ? "26px" : "4px"};
                 bottom: 4px;
                 background-color: white;
                 transition: .4s;
@@ -300,38 +305,38 @@ export default function Menus() {
       confirmButtonColor: "#FF5823",
       showCancelButton: true,
       cancelButtonText: "Cancel",
-      width: '600px',
+      width: "600px",
       didOpen: () => {
         const pickerButton = document.getElementById("image-picker");
         const imageInput = document.getElementById("item-image");
-  
+
         pickerButton.addEventListener("click", () => {
           const fileInput = document.createElement("input");
           fileInput.type = "file";
           fileInput.accept = "image/*";
-  
+
           fileInput.onchange = (event) => {
             const file = event.target.files[0];
             if (file) {
               imageInput.value = file.name;
             }
           };
-  
+
           fileInput.click();
         });
-  
+
         // Initialize toggle switch
         const toggle = document.getElementById("item-available");
         const slider = toggle.nextElementSibling;
         const sliderCircle = slider.nextElementSibling;
-  
-        toggle.addEventListener('change', function() {
-          if(this.checked) {
-            slider.style.backgroundColor = '#FF5823';
-            sliderCircle.style.left = '26px';
+
+        toggle.addEventListener("change", function () {
+          if (this.checked) {
+            slider.style.backgroundColor = "#FF5823";
+            sliderCircle.style.left = "26px";
           } else {
-            slider.style.backgroundColor = '#ccc';
-            sliderCircle.style.left = '4px';
+            slider.style.backgroundColor = "#ccc";
+            sliderCircle.style.left = "4px";
           }
         });
       },
@@ -342,10 +347,11 @@ export default function Menus() {
           price: parseFloat(document.getElementById("item-price").value),
           imageUrl: document.getElementById("item-image").value,
           isAvailable: document.getElementById("item-available").checked,
+          isApproved: item.isApproved,
         };
       },
     });
-  
+
     if (formValues) {
       try {
         await axios.put(
@@ -357,7 +363,7 @@ export default function Menus() {
           title: "Updated!",
           text: "Menu item has been updated",
           icon: "success",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
         handleMenuClick(selectedMenuId);
       } catch (err) {
@@ -365,7 +371,7 @@ export default function Menus() {
           title: "Error!",
           text: err.response?.data?.message || "Failed to update item",
           icon: "error",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
       }
     }
@@ -401,30 +407,39 @@ export default function Menus() {
         `http://localhost:8080/api/restaurant/menu/MenuItems/${restaurantId}/menus/${menuId}/items`,
         { headers }
       );
-      
-      // Always set the selected menu ID first
+      console.log(menuId);
       setSelectedMenuId(menuId);
-      
+
       if (response.data && response.data.length > 0) {
-        setMenuItems(response.data);
+        // Filter to only show approved items
+        const approvedItems = response.data.filter((item) => item.isApproved);
+        setMenuItems(approvedItems);
+
+        if (approvedItems.length === 0) {
+          MySwal.fire({
+            title: "No Approved Items Found",
+            text: "This menu currently has no approved items.",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        }
       } else {
-        setMenuItems([]); // Clear any existing items
+        setMenuItems([]);
         MySwal.fire({
           title: "No Items Found",
           text: "This menu currently has no items.",
           icon: "info",
-          confirmButtonText: "OK"
+          confirmButtonText: "OK",
         });
       }
     } catch (error) {
       console.error("Error fetching menu items:", error);
-      setMenuItems([]); // Clear items on error too
-      setSelectedMenuId(null); // Optionally clear selection on error
+      setMenuItems([]);
+      setSelectedMenuId(null);
       MySwal.fire({
-        
         text: "No menu items For This",
         icon: "error",
-        confirmButtonText: "OK"
+        confirmButtonText: "OK",
       });
     }
   };
@@ -508,12 +523,13 @@ export default function Menus() {
       confirmButtonColor: "#FF5823",
       showCancelButton: true,
       cancelButtonText: "Cancel",
-      width: '600px',
+      width: "600px",
       preConfirm: () => {
         return {
           menuName: document.getElementById("menu-name").value,
           description: document.getElementById("menu-desc").value,
           isActive: document.getElementById("menu-active").checked,
+          isApproved: false,
         };
       },
       didOpen: () => {
@@ -521,19 +537,19 @@ export default function Menus() {
         const toggle = document.getElementById("menu-active");
         const slider = toggle.nextElementSibling;
         const sliderCircle = slider.nextElementSibling;
-  
-        toggle.addEventListener('change', function() {
-          if(this.checked) {
-            slider.style.backgroundColor = '#FF5823';
-            sliderCircle.style.left = '26px';
+
+        toggle.addEventListener("change", function () {
+          if (this.checked) {
+            slider.style.backgroundColor = "#FF5823";
+            sliderCircle.style.left = "26px";
           } else {
-            slider.style.backgroundColor = '#ccc';
-            sliderCircle.style.left = '4px';
+            slider.style.backgroundColor = "#ccc";
+            sliderCircle.style.left = "4px";
           }
         });
       },
     });
-  
+
     if (result) {
       try {
         await axios.post(
@@ -545,7 +561,7 @@ export default function Menus() {
           title: "Created!",
           text: "Menu successfully added.",
           icon: "success",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
         fetchMenus();
       } catch (err) {
@@ -553,7 +569,7 @@ export default function Menus() {
           title: "Error!",
           text: err.response?.data?.message || "Failed to create menu",
           icon: "error",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
       }
     }
@@ -567,7 +583,7 @@ export default function Menus() {
           <input 
             id="menu-name" 
             class="swal2-input" 
-            value="${menu.menuName || ''}" 
+            value="${menu.menuName || ""}" 
             placeholder="Menu Name"
             style="padding: 12px; border-radius: 8px;"
           />
@@ -577,7 +593,7 @@ export default function Menus() {
             class="swal2-textarea" 
             placeholder="Description"
             style="padding: 12px; border-radius: 8px; min-height: 100px;"
-          >${menu.menuDescription || ''}</textarea>
+          >${menu.menuDescription || ""}</textarea>
           
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <span style="font-size: 14px; color: #333;">Menu Status</span>
@@ -592,7 +608,7 @@ export default function Menus() {
                 type="checkbox" 
                 id="menu-active" 
                 style="opacity: 0; width: 0; height: 0;"
-                ${menu.isAvailable ? 'checked' : ''}
+                ${menu.isActive ? "checked" : ""}
               />
               <span style="
                 position: absolute;
@@ -601,7 +617,7 @@ export default function Menus() {
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: ${menu.isAvailable ? '#FF5823' : '#ccc'};
+                background-color: ${menu.isActive ? "#FF5823" : "#ccc"};
                 transition: .4s;
                 border-radius: 34px;
               "></span>
@@ -609,7 +625,7 @@ export default function Menus() {
                 position: absolute;
                 height: 18px;
                 width: 18px;
-                left: ${menu.isAvailable ? '26px' : '4px'};
+                left: ${menu.isActive ? "26px" : "4px"};
                 bottom: 4px;
                 background-color: white;
                 transition: .4s;
@@ -639,12 +655,13 @@ export default function Menus() {
       confirmButtonColor: "#FF5823",
       showCancelButton: true,
       cancelButtonText: "Cancel",
-      width: '600px',
+      width: "600px",
       preConfirm: () => {
         return {
           menuName: document.getElementById("menu-name").value,
           description: document.getElementById("menu-desc").value,
-          isActive: document.getElementById("menu-active").checked,
+          isActive: document.getElementById("menu-active").checked, // Use the checkbox value
+          isApproved: menu.isApproved, // Preserve the approval status separately
         };
       },
       didOpen: () => {
@@ -652,19 +669,19 @@ export default function Menus() {
         const toggle = document.getElementById("menu-active");
         const slider = toggle.nextElementSibling;
         const sliderCircle = slider.nextElementSibling;
-  
-        toggle.addEventListener('change', function() {
-          if(this.checked) {
-            slider.style.backgroundColor = '#FF5823';
-            sliderCircle.style.left = '26px';
+
+        toggle.addEventListener("change", function () {
+          if (this.checked) {
+            slider.style.backgroundColor = "#FF5823";
+            sliderCircle.style.left = "26px";
           } else {
-            slider.style.backgroundColor = '#ccc';
-            sliderCircle.style.left = '4px';
+            slider.style.backgroundColor = "#ccc";
+            sliderCircle.style.left = "4px";
           }
         });
       },
     });
-  
+
     if (result) {
       try {
         await axios.put(
@@ -676,7 +693,7 @@ export default function Menus() {
           title: "Updated!",
           text: "Menu has been updated successfully.",
           icon: "success",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
         fetchMenus();
       } catch (err) {
@@ -684,7 +701,7 @@ export default function Menus() {
           title: "Error!",
           text: err.response?.data?.message || "Failed to update menu",
           icon: "error",
-          confirmButtonColor: "#FF5823"
+          confirmButtonColor: "#FF5823",
         });
       }
     }
@@ -749,12 +766,12 @@ export default function Menus() {
               <div className="mt-2">
                 <span
                   className={`inline-block text-xs font-semibold px-2 py-1 rounded-full ${
-                    menu.isAvailable
+                    menu.isActive
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-700"
                   }`}
                 >
-                  {menu.isAvailable ? "Active" : "Inactive"}
+                  {menu.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
             </div>
@@ -802,25 +819,26 @@ export default function Menus() {
                 key={item.menuItemId}
                 className="bg-white p-5 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-200 flex flex-col"
               >
-               <img
-  src={
-    item.imageUrl.startsWith("http")
-      ? item.imageUrl
-      : (() => {
-          try {
-            return require(`../../assets/${item.imageUrl}`);
-          } catch {
-            return item.imageUrl; // fallback to string even if not http
-          }
-        })()
-  }
-  alt={item.name}
-  onError={(e) => {
-    e.target.onerror = null;
-    e.target.src = "https://via.placeholder.com/300x200?text=Image+Not+Found";
-  }}
-  className="w-full h-64 object-cover rounded-md mb-4"
-/>
+                <img
+                  src={
+                    item.imageUrl.startsWith("http")
+                      ? item.imageUrl
+                      : (() => {
+                          try {
+                            return require(`../../assets/${item.imageUrl}`);
+                          } catch {
+                            return item.imageUrl; // fallback to string even if not http
+                          }
+                        })()
+                  }
+                  alt={item.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/300x200?text=Image+Not+Found";
+                  }}
+                  className="w-full h-64 object-cover rounded-md mb-4"
+                />
 
                 <div className="flex-1">
                   <h4 className="text-lg font-bold text-gray-800">
