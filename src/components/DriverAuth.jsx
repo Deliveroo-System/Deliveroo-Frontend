@@ -48,7 +48,7 @@ function DriverAuth({ isLogin }) {
         console.log("Login successful, storing token");
         localStorage.setItem('driverToken', data.token);
         localStorage.setItem('driverInfo', JSON.stringify(data.driver));
-        navigate('/dashboard');
+        navigate('/driverDashboard');
       } else {
         setError('Registration successful! Please login.');
       }
@@ -158,7 +158,7 @@ function DriverAuth({ isLogin }) {
         
         {/* Replace toggle button with Link */}
         <Link 
-          to={isLogin ? '/register' : '/login'} 
+          to={isLogin ? '/driverRegister' : '/driverLogin'} 
           className="toggle-auth-btn"
         >
           {isLogin ? 'Need to register?' : 'Already have an account?'}

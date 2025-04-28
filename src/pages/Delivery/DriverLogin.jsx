@@ -14,7 +14,7 @@ export default function DriverLogin() {
       const response = await authService.login({ email, password });
       alert('Login successful!');
       console.log('Token:', response.token);
-      navigate('/delivery');
+      navigate('/driverDashboard'); // Navigate to driverDashboard
     } catch (err) {
       setError('Invalid email or password');
     }

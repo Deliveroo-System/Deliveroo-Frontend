@@ -42,12 +42,12 @@ function App() {
           <Route path="/" element={<Navigate to="/login" replace />} />
           
           {/* Auth routes */}
-          <Route path="/DriverLogin" element={<DriverAuth isLogin={true} />} />
-          <Route path="/DriverRegister" element={<DriverAuth isLogin={false} />} />
+          <Route path="/driverLogin" element={<DriverAuth isLogin={true} />} />
+          <Route path="/driverRegister" element={<DriverAuth isLogin={false} />} />
           
           {/* Protected dashboard route */}
           <Route 
-            path="/dashboard" 
+            path="/driverDashboard" 
             element={
               <PrivateRoute>
                 <DriverDashboard />
