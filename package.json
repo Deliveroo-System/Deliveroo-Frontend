@@ -2,7 +2,7 @@
   "name": "deliveroo-frontend",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -17,9 +17,11 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@stripe/stripe-js": "^7.1.0",
     "@tailwindcss/postcss7-compat": "^2.2.17",
+
     "animate.css": "^4.1.1",
     "axios": "^1.8.4",
     "framer-motion": "^12.7.4",
+
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.484.0",
     "react": "^19.0.0",
@@ -43,7 +45,9 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "postcss": "^8.5.3",
+
     "tailwindcss": "^4.1.4",
     "vite": "^6.2.3"
+
   }
 }
