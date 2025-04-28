@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../services/apiOrder";
 
-function Login() {
+function adminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function Login() {
     e.preventDefault();
     try {
       await authService.login({ email, password });
-      navigate("/order/profile"); // Redirect to the restaurant page after successful login
+      navigate("/order/dashboard"); // Redirect to the restaurant page after successful login
     } catch (err) {
       alert("Login failed: " + err.response?.data?.message);
     }
@@ -29,4 +29,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default adminLogin;

@@ -5,13 +5,13 @@ import Register from "./features/auth/Register";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import LandinPage from "./pages/DeliverooLanding";
- 
+import Log from "./pages/Order/adminLog";
 import Cart from "./pages/Order/Cart";
 import Checkout from "./pages/Order/Checkout"; // Import Checkout
-import Payment from "./pages/Order/Payment"; // Import Payment
+import Profile from "./pages/Order/Profile"; 
 import LoginOrder from "./pages/Order/Login";
 import Restaurant from "./pages/Order/Restaurant";
- 
+import Dash from "./pages/Order/orderDashboard";
 import RestaurantAdd from "./features/auth/RestaurantAdd";
 import RestaurantManagerRegister from "./features/auth/RegistrationFlow";
 import RestaurantHome from "./pages/Restaurant/HomeRestaurants";
@@ -47,12 +47,13 @@ const App = () => {
 
 
       {/* Order Routes */}
+      <Route path="/order/profile" element={<Profile />} /> {/* Add Profile route */}
       <Route path="/cart" element={<Cart />} />
       <Route path="/order/checkout" element={<Checkout />} /> {/* Add Checkout route */}
-      <Route path="/order/payment" element={<Payment />} /> {/* Add Payment route */}
+      <Route path="/order/admin/login" element={<Log />} /> {/* Add Admin Login route */}
       <Route path="/order/login" element={<LoginOrder />} /> {/* Add Order Login route */}
       <Route path="/order/restaurant" element={<Restaurant />} /> {/* Add Restaurant route */}
-
+      <Route path="/order/dashboard" element={<Dash />} /> {/* Add Order Dashboard route */}
       {/* Restaurant Routes */}
 
       {/* Admin Routes */} 

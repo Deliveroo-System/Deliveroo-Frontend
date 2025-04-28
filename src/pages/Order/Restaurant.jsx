@@ -55,6 +55,7 @@ const Restaurant = () => {
   return (
     <>
       <NavBar />
+      
       <div className="max-w-8xl mx-auto px-4 py-20">
         <h2 className="text-4xl font-bold text-center mb-20">
           Explore Restaurants on Deliveroo Food
