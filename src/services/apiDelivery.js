@@ -67,6 +67,10 @@ export const deliveryService = {
     const response = await api.get("/deliveries");
     return response.data;
   },
+  trackDelivery: async (deliveryId) => {
+    const response = await api.get(`/deliveries/track/${deliveryId}`);
+    return response.data;
+  },
 };
 
 // Driver Service
@@ -82,4 +86,8 @@ export const driverService = {
     }
     return response.data;
   },
-}
+  getDriverLocation: async (driverId) => {
+    const response = await api.get(`/drivers/location/${driverId}`);
+    return response.data;
+  },
+};
