@@ -10,7 +10,7 @@ const Card = () => {
   };
 
   const handleSignUpToDeliver = () => {
-    navigate("/delivery/login");
+    navigate("/driverLogin");
   };
 
   const handleCreateBusinessAccount = () => {
