@@ -90,7 +90,7 @@ const Navbar = () => {
         style={{ backgroundColor: "rgba(20, 20, 20, 0.9)" }}
       >
         <div className="text-2xl font-normal tracking-tight">
-  <Link to="/" className="hover:text-blue-500">
+  <Link to="/order/restaurant" className="hover:text-blue-500">
     Deliveroo <span className="font-bold" style={{ color: "rgba(255,88,35,1)" }}>FOOD</span>
   </Link>
 </div>

@@ -221,15 +221,15 @@ function Checkout() {
           ...orderData,
         })
       );
-      await saveUserDetails(orderResult.order._id);
-      navigate("/order/success", {
-        state: {
-          order: {
-            ...orderData,
-            orderId: orderResult.order._id, // ✅ Correct here too
-          },
-        },
-      });
+      //await saveUserDetails(orderResult.order._id);
+      navigate("/order/success",) //{
+       // state: {
+       //   order: {
+        //    ...orderData,
+//orderId: orderResult.order._id, // ✅ Correct here too
+       //   },
+       // },
+     // });
     } catch (error) {
       console.error("Order Error:", error);
       Swal.fire("Error", error.message || "Failed to place order", "error");

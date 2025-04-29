@@ -152,6 +152,12 @@ function OrderSuccess() {
             >
               {showPDFPreview ? "Hide Preview" : "Preview Receipt"}
             </button>
+            <button
+  onClick={() => navigate("/track-delivery")}
+  className="bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300 sm:ml-4 mt-4 sm:mt-0"
+>
+  Track My Order
+</button>
           </div>
 
           {showPDFPreview && (
@@ -161,8 +167,11 @@ function OrderSuccess() {
               </PDFViewer>
             </div>
           )}
+          
         </div>
+        
       </div>
+
 
       <Footer />
     </div>
