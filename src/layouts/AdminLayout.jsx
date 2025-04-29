@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
 import {
   FaBars,
   FaHome,
@@ -17,14 +18,14 @@ import {
 const MySwal = withReactContent(Swal);
 
 const AdminLayout = () => {
+  const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   const navItems = [
-    { name: "Dashboard", icon: <FaHome />, path: "/admin" },
+  
     { name: "Restaurants", icon: <FaStore />, path: "/admin/restaurants" },
-    { name: "Menus", icon: <FaThLarge />, path: "/admin/menus" },
-    { name: "Menu Items", icon: <FaBoxes />, path: "/admin/menu-items" },
+   
     { name: "Users", icon: <FaUsers />, path: "/admin/users" },
     { name: "Reports", icon: <FaChartBar />, path: "/admin/reports" }
   ];

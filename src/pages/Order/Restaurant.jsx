@@ -184,8 +184,11 @@ const Restaurant = () => {
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100"
                   onClick={() =>
-                    navigate(`/cart`, {
-                      state: { restaurantId: restaurant.restaurantId },
+                    navigate(`/cart`, { 
+                      state: { 
+                        restaurantId: restaurant.restaurantId,
+                        restaurantData: restaurant // Optional: pass the whole restaurant object if needed
+                      } 
                     })
                   }
                 >
