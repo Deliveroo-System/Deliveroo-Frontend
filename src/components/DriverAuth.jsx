@@ -17,6 +17,7 @@ function DriverAuth({ isLogin }) {
       password: '',
       deliveryCities: [''],
     });
+    
   }, [isLogin]);
 
   const [error, setError] = useState('');
