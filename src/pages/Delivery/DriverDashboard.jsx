@@ -41,7 +41,7 @@ function DriverDashboard() {
 
   const fetchOrders = async (driverId) => {
     try {
-      const response = await fetch(`http://localhost:5061/api/deliveries/driver/${driverId}/all`, {
+      const response = await fetch(`http://localhost:3000/api/deliveries/driver/${driverId}/all`, {
         headers: getAuthHeaders()
       });
       
@@ -60,7 +60,7 @@ function DriverDashboard() {
 
   const fetchDriverInfo = async (driverId) => {
     try {
-      const response = await fetch(`http://localhost:5061/api/drivers/${driverId}`, {
+      const response = await fetch(`http://localhost:3000/api/drivers/${driverId}`, {
         headers: getAuthHeaders()
       });
       
@@ -79,7 +79,7 @@ function DriverDashboard() {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await fetch('http://localhost:5061/api/deliveries/status', {
+      const response = await fetch('http://localhost:3000/api/deliveries/status', {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({
