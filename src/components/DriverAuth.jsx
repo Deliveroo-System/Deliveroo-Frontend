@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './DriverAuth.css';
 
 function DriverAuth({ isLogin }) {
   const navigate = useNavigate();
@@ -10,16 +9,15 @@ function DriverAuth({ isLogin }) {
     password: '',
     deliveryCities: [''],
   });
-  
-  // Replace the internal isLogin state with the prop
+
   useEffect(() => {
-    // Clear form data when switching between login and register
     setFormData({
       name: '',
       email: '',
       password: '',
       deliveryCities: [''],
     });
+    
   }, [isLogin]);
 
   const [error, setError] = useState('');
@@ -27,25 +25,18 @@ function DriverAuth({ isLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin ? '/api/drivers/login' : '/api/drivers/register';
-    
+
     try {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error);
-      }
+      if (!response.ok) throw new Error(data.error);
 
       if (isLogin) {
-        // Store the token as-is without any modification
-        console.log("Login successful, storing token");
         localStorage.setItem('driverToken', data.token);
         localStorage.setItem('driverInfo', JSON.stringify(data.driver));
         navigate('/driverDashboard');
@@ -64,10 +55,7 @@ function DriverAuth({ isLogin }) {
   };
 
   const addCity = () => {
-    setFormData({
-      ...formData,
-      deliveryCities: [...formData.deliveryCities, '']
-    });
+    setFormData({ ...formData, deliveryCities: [...formData.deliveryCities, ''] });
   };
 
   const removeCity = (index) => {
@@ -76,42 +64,45 @@ function DriverAuth({ isLogin }) {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-form">
-        <h2>{isLogin ? 'Driver Login' : 'Driver Registration'}</h2>
-        
-        {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8">
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+          {isLogin ? 'Driver Login' : 'Driver Registration'}
+        </h2>
+
+        {error && <div className="text-red-600 text-sm mb-4 text-center">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
             <>
-              <div className="form-group">
-                <label htmlFor="name">Name</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
-                  id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
                 />
               </div>
-              
-              <div className="form-group">
-                <label>Delivery Cities</label>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Cities</label>
                 {formData.deliveryCities.map((city, index) => (
-                  <div key={index} className="city-input">
+                  <div key={index} className="flex items-center gap-2 mb-2">
                     <input
                       type="text"
                       value={city}
                       onChange={(e) => handleCityChange(index, e.target.value)}
-                      placeholder="Enter city name"
+                      placeholder="Enter city"
                       required
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
                     />
                     {formData.deliveryCities.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeCity(index)}
-                        className="remove-city"
+                        className="text-sm text-red-500 hover:text-red-700"
                       >
                         Remove
                       </button>
@@ -121,48 +112,52 @@ function DriverAuth({ isLogin }) {
                 <button
                   type="button"
                   onClick={addCity}
-                  className="add-city"
+                  className="text-sm text-black hover:underline"
                 >
-                  Add Another City
+                  + Add Another City
                 </button>
               </div>
             </>
           )}
-          
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
-              id="email"
               value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
-              id="password"
               value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
-          
-          <button type="submit" className="submit-btn">
+
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-2 rounded-xl hover:bg-gray-900 transition duration-300"
+          >
             {isLogin ? 'Login' : 'Register'}
           </button>
         </form>
-        
-        {/* Replace toggle button with Link */}
-        <Link 
-          to={isLogin ? '/driverRegister' : '/driverLogin'} 
-          className="toggle-auth-btn"
-        >
-          {isLogin ? 'Need to register?' : 'Already have an account?'}
-        </Link>
+
+        <div className="mt-4 text-center">
+          <Link
+            to={isLogin ? '/driverRegister' : '/driverLogin'}
+            className="text-sm text-black hover:underline"
+          >
+            {isLogin ? 'Need to register?' : 'Already have an account?'}
+          </Link>
+        </div>
       </div>
     </div>
   );

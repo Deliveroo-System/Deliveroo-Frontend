@@ -5,7 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
+import Header from '../../components/common/headerlanding'
+import Footer from '../../components/common/footerLanding'
 // Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -105,7 +106,9 @@ const DriverTracking = () => {
   };
 
   return (
+   
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+       <Header/>
       <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="p-6 md:p-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Delivery Tracking System</h2>
@@ -207,6 +210,7 @@ const DriverTracking = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

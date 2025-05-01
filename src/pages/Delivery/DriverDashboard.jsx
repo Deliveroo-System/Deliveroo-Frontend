@@ -7,14 +7,87 @@ function DriverDashboard() {
   const [activeOrders, setActiveOrders] = useState([]);
   const [pendingOrders, setPendingOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
+  const useFakeData = true;
+  
+  const fakeOrders = [
+    {
+      _id: 'ORD-10001',
+      status: 'Assigned',
+      customerName: 'Mr. Amal Perera',
+      address: 'No. 45, Temple Road',
+      city: 'Colombo',
+      items: [
+        { name: 'Chicken Biryani' },
+        { name: 'Mango Lassi' }
+      ]
+    },
+    {
+      _id: 'ORD-10002',
+      status: 'On the Way',
+      customerName: 'Ms. Nadeesha Fernando',
+      address: 'Apartment 7B, Ocean Heights',
+      city: 'Negombo',
+      items: [
+        { name: 'Seafood Pizza' },
+        { name: 'Garlic Bread' }
+      ]
+    },
+    {
+      _id: 'ORD-10003',
+      status: 'Delivered',
+      customerName: 'Dr. Kusal Jayasinghe',
+      address: '12, Lake View Drive',
+      city: 'Kandy',
+      items: [
+        { name: 'Vegan Salad' },
+        { name: 'Green Smoothie' }
+      ]
+    },
+    {
+      _id: 'ORD-10004',
+      status: 'Cancelled',
+      customerName: 'Mrs. Tharushi Madushani',
+      address: '19, Flower Road',
+      city: 'Galle',
+      items: [
+        { name: 'Egg Fried Rice' }
+      ]
+    },
+    {
+      _id: 'ORD-10005',
+      status: 'Assigned',
+      customerName: 'Mr. Dilan Senanayake',
+      address: '33, Palm Grove',
+      city: 'Matara',
+      items: [
+        { name: 'Grilled Chicken Wrap' },
+        { name: 'Iced Tea' }
+      ]
+    }
+  ];
+  
+  
+  const fakeDriverInfo = {
+    id: 'DRV-9001',
+    name: 'Kasun Abeywickrama',
+    deliveryCities: ['Colombo', 'Kandy', 'Negombo', 'Galle', 'Matara']
+  };
+  
+
 
   useEffect(() => {
     const driverId = JSON.parse(localStorage.getItem('driverInfo'))?.id;
-    if (driverId) {
+  
+    if (useFakeData) {
+      setDriverInfo(fakeDriverInfo);
+      setOrders(fakeOrders);
+    } else if (driverId) {
       fetchOrders(driverId);
       fetchDriverInfo(driverId);
     }
   }, []);
+  
+  
 
   useEffect(() => {
     if (orders.length > 0) {

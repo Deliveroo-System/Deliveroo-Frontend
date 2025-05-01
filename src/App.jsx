@@ -35,10 +35,7 @@ import DriverDashboard from './pages/Delivery/DriverDashboard';
 import DriverTracking from './pages/Delivery/DriverTracking';
 
 function App() {
-  const PrivateRoute = ({ children }) => {
-    const isAuthenticated = localStorage.getItem('token');
-    return isAuthenticated ? children : <Navigate to="/login" />;
-  };
+ 
 
   return (
     <div className="App">
@@ -62,9 +59,9 @@ function App() {
 
           {/* Protected driver dashboard */}
           <Route path="/driverDashboard" element={
-            <PrivateRoute>
+            
               <DriverDashboard />
-            </PrivateRoute>
+            
           } />
 
           {/* Driver tracking - public */}
