@@ -180,7 +180,7 @@ function Checkout() {
       if (!res.ok) throw new Error("Payment capture failed");
 
       const to = "+94703889971";
-      const result = await sendPaymentSMS(to);
+      //const result = await sendPaymentSMS(to);
 
       await handlePlaceOrder(data.orderID, "paypal");
     } catch (error) {
