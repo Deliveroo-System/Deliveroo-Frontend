@@ -19,14 +19,50 @@ const navItems = [
   { name: "Payments", icon: <FaCreditCard />, path: "payments" },
   { name: "Help", icon: <FaQuestionCircle />, path: "help" },
 ];
+
 const MySwal = withReactContent(Swal);
+
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/auth/login/restaurant-manager");
+    MySwal.fire({
+      title: 'Are you sure?',
+      text: "You'll be logged out of the system",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, log me out',
+      cancelButtonText: 'Cancel',
+      background: '#ffffff',
+      backdrop: `
+        rgba(0,0,0,0.4)
+        url("/images/nyan-cat.gif")
+        left top
+        no-repeat
+      `,
+      customClass: {
+        confirmButton: 'px-4 py-2 rounded-lg',
+        cancelButton: 'px-4 py-2 rounded-lg'
+      },
+      buttonsStyling: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        navigate("/auth/login/restaurant-manager");
+        
+        // Optional: Show a success message after logout
+        MySwal.fire({
+          title: 'Logged Out!',
+          text: 'You have been successfully logged out.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
   };
 
   return (

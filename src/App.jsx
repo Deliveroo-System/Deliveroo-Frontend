@@ -25,7 +25,7 @@ import Help from "./pages/Restaurant/Help";
 import OrderSuccess from "./pages/Order/OrderSuccess";
 import AdminRestaurantManagement from "./pages/admin/AdminRestaurantManagement";
 import AdminUserManagement from "./pages/admin/OrderDashboard";
-
+import Profile from "./pages/Order/Profile";
 // Delivery pages
 import Delivery from "./pages/Delivery/Delivery";
 import DriverLogin from "./pages/Delivery/DriverLogin";
@@ -74,7 +74,7 @@ function App() {
           <Route path="/order/login" element={<LoginOrder />} />
           <Route path="/order/restaurant" element={<Restaurant />} />
           <Route path="/order/success" element={<OrderSuccess />} />
-
+          <Route path="/User/profile" element={<Profile />} />
           {/* Payment */}
           <Route path="/payment/user/checkout" element={<CheckoutPage />} />
 

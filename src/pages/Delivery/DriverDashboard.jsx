@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-
+import Swal from 'sweetalert2';
+import axios from 'axios';
 function DriverDashboard() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
@@ -7,94 +8,31 @@ function DriverDashboard() {
   const [activeOrders, setActiveOrders] = useState([]);
   const [pendingOrders, setPendingOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
-  const useFakeData = true;
-  
-  const fakeOrders = [
-    {
-      _id: 'ORD-10001',
-      status: 'Assigned',
-      customerName: 'Mr. Amal Perera',
-      address: 'No. 45, Temple Road',
-      city: 'Colombo',
-      items: [
-        { name: 'Chicken Biryani' },
-        { name: 'Mango Lassi' }
-      ]
-    },
-    {
-      _id: 'ORD-10002',
-      status: 'On the Way',
-      customerName: 'Ms. Nadeesha Fernando',
-      address: 'Apartment 7B, Ocean Heights',
-      city: 'Negombo',
-      items: [
-        { name: 'Seafood Pizza' },
-        { name: 'Garlic Bread' }
-      ]
-    },
-    {
-      _id: 'ORD-10003',
-      status: 'Delivered',
-      customerName: 'Dr. Kusal Jayasinghe',
-      address: '12, Lake View Drive',
-      city: 'Kandy',
-      items: [
-        { name: 'Vegan Salad' },
-        { name: 'Green Smoothie' }
-      ]
-    },
-    {
-      _id: 'ORD-10004',
-      status: 'Cancelled',
-      customerName: 'Mrs. Tharushi Madushani',
-      address: '19, Flower Road',
-      city: 'Galle',
-      items: [
-        { name: 'Egg Fried Rice' }
-      ]
-    },
-    {
-      _id: 'ORD-10005',
-      status: 'Assigned',
-      customerName: 'Mr. Dilan Senanayake',
-      address: '33, Palm Grove',
-      city: 'Matara',
-      items: [
-        { name: 'Grilled Chicken Wrap' },
-        { name: 'Iced Tea' }
-      ]
-    }
-  ];
-  
-  
-  const fakeDriverInfo = {
-    id: 'DRV-9001',
-    name: 'Kasun Abeywickrama',
-    deliveryCities: ['Colombo', 'Kandy', 'Negombo', 'Galle', 'Matara']
-  };
-  
-
 
   useEffect(() => {
-    const driverId = JSON.parse(localStorage.getItem('driverInfo'))?.id;
-  
-    if (useFakeData) {
-      setDriverInfo(fakeDriverInfo);
-      setOrders(fakeOrders);
-    } else if (driverId) {
-      fetchOrders(driverId);
-      fetchDriverInfo(driverId);
+    try {
+      // Get the raw token
+      const token = localStorage.getItem('token');
+      console.log(token)
+      // If using JWT decoding:
+      if (token) {
+       fetchApprovedOrders();
+      //fetchDriverInfo(token);
+    
+      }
+
+    } catch (err) {
+      console.error("Error parsing token:", err);
+      setError('Failed to load driver information');
     }
   }, []);
   
-  
-
   useEffect(() => {
     if (orders.length > 0) {
       const active = orders.filter(order => order.status === "On the Way");
       setActiveOrders(active);
       
-      const pending = orders.filter(order => order.status === "Assigned");
+      const pending = orders.filter(order => order.status === "Pending" || order.status === "Assigned");
       setPendingOrders(pending);
       
       const completed = orders.filter(order => 
@@ -105,29 +43,67 @@ function DriverDashboard() {
   }, [orders]);
 
   const getAuthHeaders = () => {
-    const token = localStorage.getItem('driverToken');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     };
   };
-
-  const fetchOrders = async (driverId) => {
+  const confirmAndUpdateStatus = (orderId, status) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to mark the order as "${status}"`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        updateOrderStatus(orderId, status);
+      }
+    });
+  };
+  
+  const fetchApprovedOrders = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/deliveries/driver/${driverId}/all`, {
+      const response = await fetch('http://localhost:5000/api/orders/details/approved', {
         headers: getAuthHeaders()
       });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch orders');
+        throw new Error(errorData.error || 'Failed to fetch approved orders');
       }
       
       const data = await response.json();
-      setOrders(data);
+    
+      const allOrders = [];
+      for (const restaurantId in data.groupedByRestaurant) {
+        allOrders.push(...data.groupedByRestaurant[restaurantId]);
+      }
+
+      const mappedOrders = allOrders.map(order => ({
+        _id: order._id,
+        orderId: order.orderId,
+        status: order.deliver === "Pending" ? "Assigned" : order.deliver,
+        customerName: order.customerName,
+        phoneNumber: order.phoneNumber,
+        address: order.address,
+        city: order.city,
+        items: order.items.map(item => ({
+          name: item.name,
+          quantity: item.qty,
+          price: item.price
+        })),
+        totalAmount: order.totalAmount,
+        paymentMethod: order.paymentMethod,
+        createdAt: order.createdAt
+      }));
+      
+      setOrders(mappedOrders);
     } catch (err) {
-      console.error("Error fetching orders:", err);
-      setError('Error fetching orders: ' + err.message);
+      console.error("Error fetching approved orders:", err);
+      setError('Error fetching approved orders: ' + err.message);
     }
   };
 
@@ -149,28 +125,62 @@ function DriverDashboard() {
       setError('Error fetching driver information: ' + err.message);
     }
   };
-
+ const sendPaymentSMS = async (to) => {
+    try {
+      const response = await axios.post('http://localhost:5056/api/notifications/sms/assigned', {
+        to: to
+      });
+      return response.data; 
+    } catch (error) {
+      console.error('Error sending payment SMS:', error);
+      throw error; 
+    }
+  };
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await fetch('http://localhost:3000/api/deliveries/status', {
+      const to = "+94703889971";
+      await sendPaymentSMS(to);
+      
+      if (!result.isConfirmed) return;
+      console.log(token)
+      const url = `http://localhost:5000/api/userdetails/userdetails/${orderId}/status`;
+  
+      const body = {
+        statusType: "deliver",
+        value: "Approved"
+      };
+  
+      const response = await fetch(url, {
         method: 'PUT',
         headers: getAuthHeaders(),
-        body: JSON.stringify({
-          deliveryId: orderId,
-          status: newStatus
-        })
+        body: JSON.stringify(body)
       });
+      
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to update status');
       }
-
-      const driverId = JSON.parse(localStorage.getItem('driverInfo'))?.id;
-      fetchOrders(driverId);
+  
+      await Swal.fire({
+        title: 'Updated!',
+        text: 'The order status has been updated.',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+  
+      fetchApprovedOrders();
     } catch (err) {
       console.error("Error updating order status:", err);
       setError('Error updating order status: ' + err.message);
+  
+      Swal.fire({
+        title: 'Error!',
+        text: err.message,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
 
@@ -194,7 +204,7 @@ function DriverDashboard() {
   const OrderCard = ({ order, showActions = true }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-800">Order #{order._id.slice(-6)}</h3>
+        <h3 className="text-lg font-semibold text-gray-800">Order #{order.orderId.slice(-6)}</h3>
         <span 
           className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(order.status)}`}
         >
@@ -203,28 +213,43 @@ function DriverDashboard() {
       </div>
       <div className="p-4 space-y-2">
         <p className="text-gray-700"><span className="font-medium">Customer:</span> {order.customerName}</p>
+        <p className="text-gray-700"><span className="font-medium">Phone:</span> {order.phoneNumber}</p>
         <p className="text-gray-700"><span className="font-medium">Address:</span> {order.address}</p>
         <p className="text-gray-700"><span className="font-medium">City:</span> {order.city}</p>
-        <p className="text-gray-700"><span className="font-medium">Items:</span> {order.items?.length || 0}</p>
+        <p className="text-gray-700"><span className="font-medium">Payment:</span> {order.paymentMethod}</p>
+        <p className="text-gray-700"><span className="font-medium">Total:</span> ${order.totalAmount.toFixed(2)}</p>
+        <div className="pt-2">
+          <p className="font-medium text-gray-700">Items:</p>
+          <ul className="list-disc list-inside">
+            {order.items.map((item, index) => (
+              <li key={index} className="text-gray-700">
+                {item.name} (x{item.quantity}) - ${item.price.toFixed(2)}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       {showActions && order.status !== 'Delivered' && order.status !== 'Rejected' && (
         <div className="p-4 bg-gray-50 flex flex-wrap gap-2">
           {order.status !== 'On the Way' && (
             <button 
-              onClick={() => updateOrderStatus(order._id, 'On the Way')}
+            onClick={() => confirmAndUpdateStatus(order.orderId, 'Delivered')}
+
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               Start Delivery
             </button>
           )}
           <button 
-            onClick={() => updateOrderStatus(order._id, 'Delivered')}
+            onClick={() => confirmAndUpdateStatus(order.orderId, 'Delivered')}
+
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium"
           >
             Mark Delivered
           </button>
           <button 
-            onClick={() => updateOrderStatus(order._id, 'Rejected')}
+            onClick={() => confirmAndUpdateStatus(order.orderId, 'Delivered')}
+
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
           >
             Reject Order
@@ -233,7 +258,6 @@ function DriverDashboard() {
       )}
     </div>
   );
-
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow-sm">

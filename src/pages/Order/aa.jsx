@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { orderService, userDetailsService } from "../../services/apiOrder";
 import NavBar from "../../components/common/headerlanding";
 import Footer from "../../components/common/footerLanding";
 import { getLoggedInUser } from "../../services/authUtils";
@@ -7,76 +8,136 @@ import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Swal from "sweetalert2";
 import { sendPaymentSMS } from "../../services/sendPaymentSMS";
 function Checkout() {
+
   const location = useLocation();
   const navigate = useNavigate();
   
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const userDetails = location.state?.userDetails || {};
+  const [paymentMethod, setPaymentMethod] = useState(""); // 'paypal' or 'cod'
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(3);
+  const [restaurants, setRestaurants] = useState([]);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+
+  const { 
+    cartItems = [], 
+    restaurantDetails = {} 
+  } = location.state || {};
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You are not logged in. Redirecting to login page.");
+      navigate("/order/login");
+    }
+  }, [navigate]);
+
   const [customerDetails, setCustomerDetails] = useState({
-    name: location.state?.userDetails?.name || "",
+    name: userDetails.name || "",
     phone: "",
     address: "",
     city: "",
     zipCode: "",
   });
-
-  const { cartItems = [], restaurantDetails = {} } = location.state || {};
-  const { restaurantId, restaurantName } = restaurantDetails;
-  const user = getLoggedInUser();
-
-  // Calculate order totals
-  const totalPrice = cartItems.reduce((sum, item) => sum + (item.menuItemPrice || 0), 0);
+  const {
+    restaurantId,
+    categoryId,
+    menuId,
+    menuItemId,
+    categoryName,
+    restaurantName,
+    restaurantDescription,
+    menuName,
+    menuItemName,
+    // Other restaurant details
+    address,
+    phoneNumber,
+    email,
+    openingTime,
+    closingTime
+  } = restaurantDetails;
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + (item.menuItemPrice || 0),
+    0
+  );
   const deliveryFee = 0.99;
   const tax = totalPrice * 0.05;
   const finalTotal = totalPrice + deliveryFee + tax;
+  const user = getLoggedInUser();
 
-  // Group cart items by name
   const groupedCartItems = cartItems.reduce((acc, item) => {
-    const existingItem = acc.find(i => i.menuItemName === item.menuItemName);
-    if (existingItem) existingItem.quantity += 1;
-    else acc.push({ ...item, quantity: 1 });
+    const existingItem = acc.find((i) => i.menuItemName === item.menuItemName);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      acc.push({ ...item, quantity: 1 });
+    }
     return acc;
   }, []);
 
-  // Validate form before submission
-  const validateForm = () => {
-    const errors = [];
-    if (!customerDetails.name) errors.push("Name is required");
-    if (!customerDetails.phone) errors.push("Phone is required");
-    if (!customerDetails.address) errors.push("Address is required");
-    if (groupedCartItems.length === 0) errors.push("Cart cannot be empty");
-    return errors;
-  };
-
-  // Save user details to backend
   const saveUserDetails = async (orderId) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Authentication token missing");
+      if (!token) {
+        throw new Error("Authentication token missing");
+      }
   
-      // Get primary item from cart
-      const primaryItem = groupedCartItems[0] || {};
+      // Validate required customer details
+      const requiredFields = ['name', 'phone', 'address'];
+      const missingFields = requiredFields.filter(field => !customerDetails?.[field]);
       
-      const payload = {
-        orderId, // This should be the string ID from the order creation
+      if (missingFields.length > 0) {
+        throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+      }
+  
+      // Validate cart items
+      if (!groupedCartItems?.length) {
+        throw new Error("No items in cart");
+      }
+  
+      // Get primary item with all required fields
+      const primaryItem = groupedCartItems[0];
+      if (!primaryItem) {
+        throw new Error("No items in cart");
+      }
+  
+      // Prepare items payload according to your sample
+      const itemsPayload = groupedCartItems.map(item => ({
+        name: item.menuItemName || 'Unknown Item',
+        qty: item.quantity || 1,
+        price: item.menuItemPrice || 0
+      }));
+  
+      // Main payload structure matching your sample input
+      const userDetailsPayload = {
+        orderId,
+        deliveryId: primaryItem.restaurantId || restaurantId || "17", // Fallback to restaurantId from props or default
         customerName: customerDetails.name.trim(),
         phoneNumber: customerDetails.phone.trim(),
         address: customerDetails.address.trim(),
-        city: customerDetails.city?.trim() || "Not specified",
-        zipCode: customerDetails.zipCode?.trim() || "Not specified",
-        paymentMethod: paymentMethod === "paypal" ? "Card" : "Cash",
-        items: groupedCartItems.map(item => ({
-          name: item.menuItemName || 'Unknown Item',
-          qty: item.quantity || 1,
-          price: item.menuItemPrice || 0
-        })),
+        city: customerDetails.city?.trim() || "Somewhere",
+        zipCode: customerDetails.zipCode?.trim() || "12345",
+        paymentMethod: paymentMethod === "paypal" ? "Card" : "Cash on Delivery",
+        cardDetails: paymentMethod === "paypal" ? {
+          cardNumber: "4111111111111111",
+          expiryDate: "12/23",
+          cvv: "123"
+        } : null,
+        items: itemsPayload,
         totalAmount: finalTotal,
-        restaurantId: primaryItem.restaurantId || restaurantId || "",
-        restaurantName: primaryItem.restaurantName || restaurantName || "Unknown Restaurant"
+        restaurantId: primaryItem.restaurantId || restaurantId || "17",
+        categoryId: primaryItem.categoryId || categoryId || "3",
+        menuId: primaryItem.menuId || menuId || "7",
+        menuItemId: primaryItem.menuItemId || menuItemId || "10",
+        categoryName: primaryItem.categoryName || categoryName || "Fine Dining",
+        restaurantName: primaryItem.restaurantName || restaurantName || "The Hub",
+        restaurantDescription: primaryItem.restaurantDescription || restaurantDescription || "An updated description for The Spice Hub.",
+        menuName: primaryItem.menuName || menuName || "Breakfast Menu",
+        menuItemName: primaryItem.menuItemName || menuItemName || "Grilled Bacon"
       };
   
-      console.log("Sending user details payload:", payload); // Debug log
+      // Clean payload (remove undefined/null values)
+      const cleanPayload = JSON.parse(JSON.stringify(userDetailsPayload));
   
       const response = await fetch("http://localhost:5000/api/userdetails/userdetails", {
         method: "POST",
@@ -84,51 +145,58 @@ function Checkout() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(cleanPayload),
       });
   
-      const responseData = await response.json();
-      
       if (!response.ok) {
-        throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
+  
+      const responseData = await response.json();
+      console.log("User details saved successfully", responseData);
+      
+
   
       return responseData;
     } catch (error) {
       console.error("User Details Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Order Failed',
+        text: error.message || "Failed to save user details",
+        footer: 'Please try again or contact support'
+      });
       throw error;
     }
   };
 
-  // Handle order placement
   const handlePlaceOrder = async (paymentId = null, method = "cod") => {
-    const validationErrors = validateForm();
-    if (validationErrors.length > 0) {
-      Swal.fire("Error", validationErrors.join("<br>"), "error");
-      return;
-    }
-
     setIsProcessing(true);
 
     try {
+      if (!customerDetails?.name || !user?.email || !groupedCartItems?.length) {
+        throw new Error("Missing required order information.");
+      }
+
+      // Prepare only the required order data
       const orderData = {
         customerName: customerDetails.name,
         customerEmail: user.email,
-        foodItems: groupedCartItems.map(item => ({
+        foodItems: groupedCartItems.map((item) => ({
           name: item.menuItemName,
           quantity: item.quantity,
           price: item.menuItemPrice,
         })),
         totalPrice: finalTotal,
-        paymentMethod: method,
-        paymentId: paymentId || undefined,
       };
 
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Authentication token missing");
+      if (!token) {
+        throw new Error("Authentication token missing. Please login again.");
+      }
 
-      // Create order
-      const orderResponse = await fetch("http://localhost:5000/api/orders", {
+      const response = await fetch("http://localhost:5000/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,39 +205,39 @@ function Checkout() {
         body: JSON.stringify(orderData),
       });
 
-      if (!orderResponse.ok) {
-        const errorData = await orderResponse.json();
-        throw new Error(errorData.message || "Failed to place order");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to place order.");
       }
 
-      const orderResult = await orderResponse.json();
-      const orderId = orderResult.order._id;
+      const orderResult = await response.json();
+      console.log(orderResult.order._id);
 
-      // Save user details
-      await saveUserDetails(orderId);
-
-      // Navigate to success page
-      navigate("/order/success", {
-        state: {
-          order: {
-            ...orderData,
-            orderId,
-          },
-        },
-      });
+      // Save order _id to localStorage
+      localStorage.setItem(
+        "currentOrder",
+        JSON.stringify({
+          orderId: orderResult.order._id, // ✅ Correct: using order._id
+          ...orderData,
+        })
+      );
+      //await saveUserDetails(orderResult.order._id);
+      navigate("/order/success",) //{
+       // state: {
+       //   order: {
+        //    ...orderData,
+//orderId: orderResult.order._id, // ✅ Correct here too
+       //   },
+       // },
+     // });
     } catch (error) {
       console.error("Order Error:", error);
-      Swal.fire("Error", error.message, "error");
+      Swal.fire("Error", error.message || "Failed to place order", "error");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // Handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerDetails(prev => ({ ...prev, [name]: value }));
-  };
   const handlePayPalSuccess = async (data) => {
     try {
       setIsProcessing(true);
@@ -180,7 +248,7 @@ function Checkout() {
       if (!res.ok) throw new Error("Payment capture failed");
 
       const to = "+94703889971";
-      const result = await sendPaymentSMS(to);
+      //  const result = await sendPaymentSMS(to);
 
       await handlePlaceOrder(data.orderID, "paypal");
     } catch (error) {
@@ -190,6 +258,13 @@ function Checkout() {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerDetails({
+      ...customerDetails,
+      [name]: value,
+    });
+  };
 
   return (
     <div className="font-sans min-h-screen bg-gray-50">

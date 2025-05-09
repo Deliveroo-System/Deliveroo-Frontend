@@ -115,7 +115,7 @@ const Navbar = () => {
           ) : (
             <>
               <button
-                onClick={() => navigate("/order/profile")}
+                onClick={() => navigate("/User/profile")}
                 className="px-6 py-2 text-white font-medium rounded-full bg-indigo-500 hover:bg-indigo-600 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50 flex items-center"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
