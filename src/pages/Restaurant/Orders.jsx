@@ -43,21 +43,25 @@ export default function Orders() {
   const handleApproveOrder = async (orderId) => {
     try {
       const token = localStorage.getItem("token"); // Get token from localStorage
-      
+      console.log(orderId);
+      console.log(token)
       if (!token) {
         throw new Error("Authentication token not found");
       }
-      
+  
       await axios.put(
-        `http://localhost:5000/api/orders/approve/${orderId}`,
-        {}, // Empty body if not needed
+        `http://localhost:5000/api/userdetails/userdetails/${orderId}/status`,
+        {
+          "statusType": "RestaurantOwner",
+          "value": "Approved"
+        },
         {
           headers: {
             Authorization: `Bearer ${token}` // Include token in headers
           }
         }
       );
-      
+  
       // Update the local state to remove the approved order
       const updatedOrders = { ...orders };
       for (const restaurantId in updatedOrders) {
